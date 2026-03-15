@@ -90,4 +90,118 @@ final class AudioFileTableColumnTests: TestCaseModel {
     @Test func allCasesCount() {
         #expect(AudioFileTableColumn.allCases.count == 10)
     }
+
+    // MARK: - Tag Insertion Index
+
+    @Test func tagInsertionIndexEmptyReturnsNil() {
+        #expect(AudioFileTableColumn.tagInsertionIndex(in: []) == nil)
+    }
+
+    @Test func tagInsertionIndexAllStandardReturnsCount() {
+        let titles = AudioFileTableColumn.allCases.map(\.displayName)
+        #expect(AudioFileTableColumn.tagInsertionIndex(in: titles) == titles.count)
+    }
+
+    @Test func tagInsertionIndexFindsFirstNonStandard() {
+        let titles = ["#", "File", "Title", "Artist"]
+        #expect(AudioFileTableColumn.tagInsertionIndex(in: titles) == 2)
+    }
+
+    @Test func tagInsertionIndexFirstColumnIsNonStandard() {
+        let titles = ["Artist", "Title"]
+        #expect(AudioFileTableColumn.tagInsertionIndex(in: titles) == 0)
+    }
+
+    @Test func tagInsertionIndexMixedOrder() {
+        let titles = ["#", "File", "Type", "Format", "Duration", "Title", "Size"]
+        #expect(AudioFileTableColumn.tagInsertionIndex(in: titles) == 5)
+    }
+
+    // MARK: - Cell Style
+
+    @Test func cellStyleNumberColumn() {
+        let style = AudioFileTableColumn.number.cellStyle()
+        #expect(style.kind == .number)
+        #expect(style.showsImage == false)
+        #expect(style.isItalic == false)
+    }
+
+    @Test func cellStyleFinderTagsColumn() {
+        let style = AudioFileTableColumn.finderTags.cellStyle()
+        #expect(style.kind == .finderTags)
+        #expect(style.showsImage == false)
+        #expect(style.isItalic == false)
+    }
+
+    @Test func cellStyleFileColumn() {
+        let style = AudioFileTableColumn.file.cellStyle()
+        #expect(style.kind == .standard)
+        #expect(style.showsImage == true)
+        #expect(style.textColorRole == .primary)
+        #expect(style.isItalic == false)
+    }
+
+    @Test func cellStyleFileColumnDirty() {
+        let style = AudioFileTableColumn.file.cellStyle(needsSave: true)
+        #expect(style.showsImage == true)
+        #expect(style.textColorRole == .primary)
+        #expect(style.isItalic == true)
+    }
+
+    @Test func cellStyleStandardColumns() {
+        let standardColumns: [AudioFileTableColumn] = [.type, .format, .duration, .fileSize, .creationDate, .modificationDate, .markers]
+
+        for column in standardColumns {
+            let style = column.cellStyle()
+            #expect(style.kind == .standard)
+            #expect(style.showsImage == false)
+            #expect(style.textColorRole == .secondary)
+            #expect(style.isItalic == false)
+        }
+    }
+
+    @Test func cellStyleStandardColumnsDirty() {
+        let style = AudioFileTableColumn.type.cellStyle(needsSave: true)
+        #expect(style.isItalic == true)
+        #expect(style.textColorRole == .secondary)
+    }
+
+    @Test func cellStyleNumberIgnoresNeedsSave() {
+        let style = AudioFileTableColumn.number.cellStyle(needsSave: true)
+        #expect(style.isItalic == false)
+    }
+
+    @Test func cellStyleFinderTagsIgnoresNeedsSave() {
+        let style = AudioFileTableColumn.finderTags.cellStyle(needsSave: true)
+        #expect(style.isItalic == false)
+    }
+
+    // MARK: - Cell Style by Column Title
+
+    @Test func cellStyleForKnownColumnTitle() {
+        let style = AudioFileTableColumn.cellStyle(forColumnTitled: "File")
+        #expect(style.kind == .standard)
+        #expect(style.showsImage == true)
+        #expect(style.textColorRole == .primary)
+    }
+
+    @Test func cellStyleForTagColumnTitle() {
+        let style = AudioFileTableColumn.cellStyle(forColumnTitled: "Artist")
+        #expect(style.kind == .standard)
+        #expect(style.showsImage == false)
+        #expect(style.textColorRole == .secondary)
+    }
+
+    @Test func cellStyleForTagColumnTitleDirty() {
+        let style = AudioFileTableColumn.cellStyle(forColumnTitled: "Artist", needsSave: true)
+        #expect(style.isItalic == true)
+    }
+
+    @Test func cellStyleForUnknownColumnTitle() {
+        let style = AudioFileTableColumn.cellStyle(forColumnTitled: "UnknownColumn")
+        #expect(style.kind == .standard)
+        #expect(style.showsImage == false)
+        #expect(style.textColorRole == .secondary)
+        #expect(style.isItalic == false)
+    }
 }

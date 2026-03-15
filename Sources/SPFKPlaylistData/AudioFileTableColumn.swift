@@ -51,4 +51,71 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
 
         return nil
     }
+
+    // MARK: - Cell Style
+
+    /// Describes the visual presentation of a table cell, independent of AppKit types.
+    public struct CellStyle: Sendable, Equatable {
+        public enum Kind: Sendable, Equatable {
+            /// Row number cell — plain text, no element lookup needed.
+            case number
+            /// Finder tag dots cell — custom rendering.
+            case finderTags
+            /// Standard image+text cell.
+            case standard
+        }
+
+        public enum TextColorRole: Sendable, Equatable {
+            case primary
+            case secondary
+        }
+
+        public let kind: Kind
+        public let showsImage: Bool
+        public let textColorRole: TextColorRole
+        public let isItalic: Bool
+    }
+
+    /// Returns the cell style for a column given the element's dirty state.
+    /// - Parameter needsSave: whether the element has unsaved changes (used for italic font).
+    public func cellStyle(needsSave: Bool = false) -> CellStyle {
+        switch self {
+        case .number:
+            return CellStyle(kind: .number, showsImage: false, textColorRole: .secondary, isItalic: false)
+        case .finderTags:
+            return CellStyle(kind: .finderTags, showsImage: false, textColorRole: .secondary, isItalic: false)
+        case .file:
+            return CellStyle(kind: .standard, showsImage: true, textColorRole: .primary, isItalic: needsSave)
+        default:
+            return CellStyle(kind: .standard, showsImage: false, textColorRole: .secondary, isItalic: needsSave)
+        }
+    }
+
+    /// Returns the cell style for an arbitrary column title, falling back to a standard secondary style.
+    /// - Parameters:
+    ///   - columnTitle: the column's display name.
+    ///   - needsSave: whether the element has unsaved changes.
+    public static func cellStyle(forColumnTitled columnTitle: String, needsSave: Bool = false) -> CellStyle {
+        if let column = AudioFileTableColumn(displayName: columnTitle) {
+            return column.cellStyle(needsSave: needsSave)
+        }
+
+        // Tag/metadata columns — standard text, no image
+        return CellStyle(kind: .standard, showsImage: false, textColorRole: .secondary, isItalic: needsSave)
+    }
+
+    /// Returns the index of the first column title that is not a standard `AudioFileTableColumn`,
+    /// indicating where tag/metadata columns begin. Returns `columnTitles.count` if all titles
+    /// are standard columns, or `nil` if the array is empty.
+    public static func tagInsertionIndex(in columnTitles: [String]) -> Int? {
+        guard !columnTitles.isEmpty else { return nil }
+
+        for i in 0 ..< columnTitles.count {
+            if AudioFileTableColumn(displayName: columnTitles[i]) == nil {
+                return i
+            }
+        }
+
+        return columnTitles.count
+    }
 }
