@@ -1,6 +1,6 @@
 # SPFKPlaylistData
 
-Lightweight playlist data transfer objects and definitions extracted from [SPFKData](https://github.com/ryanfrancesconi/spfk-data). Depends on [SPFKMetadataBase](https://github.com/ryanfrancesconi/spfk-metadata-base) for metadata types — no TagLib, libsndfile, or C++ dependency.
+Lightweight playlist data types and definitions extracted from [SPFKData](https://github.com/ryanfrancesconi/spfk-data). Depends on [SPFKMetadataBase](https://github.com/ryanfrancesconi/spfk-metadata-base) for metadata types — no TagLib, libsndfile, or C++ dependency.
 
 File I/O operations (parsing audio files into playlist elements, importing, searching) remain in [SPFKData](https://github.com/ryanfrancesconi/spfk-data).
 
@@ -13,9 +13,9 @@ File I/O operations (parsing audio files into playlist elements, importing, sear
 
 | Type | Description |
 |------|-------------|
-| **PlaylistDataDTO** | Playlist container with name, collection type, preset, and ordered elements |
-| **PlaylistElementDTO** | Individual playlist entry wrapping audio file metadata, tags, and display values |
-| **PlaylistGroupDTO** | Group container holding multiple playlists with sort ordering |
+| **Playlist** | Playlist container with name, collection type, preset, and ordered elements |
+| **PlaylistElement** | Individual playlist entry wrapping audio file metadata, tags, and display values |
+| **PlaylistGroup** | Group container holding multiple playlists with sort ordering |
 | **CollectionType** | Enum distinguishing system vs. user collections |
 | **CollectionPreset** | Enum for built-in playlist presets (system group, search results, favorites, playlists) |
 | **AudioFileTableColumn** | Column definitions for playlist table display (file, duration, format, markers, etc.) |

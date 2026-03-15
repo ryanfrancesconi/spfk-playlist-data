@@ -1,6 +1,6 @@
 import Foundation
 
-extension PlaylistDataDTO {
+extension Playlist {
     public mutating func sort(key: String, direction: Bool) {
         let sortedData = sort(elements, by: key, direction: direction)
 

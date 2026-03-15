@@ -59,9 +59,9 @@ public enum CollectionPreset: UInt8 {
 
     public static func playlist(
         preset: CollectionPreset,
-        elements: [PlaylistElementDTO]
-    ) -> PlaylistDataDTO {
-        PlaylistDataDTO(
+        elements: [PlaylistElement]
+    ) -> Playlist {
+        Playlist(
             uuid: preset.uuid,
             title: preset.title,
             isEditable: false,

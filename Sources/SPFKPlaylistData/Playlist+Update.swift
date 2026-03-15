@@ -2,7 +2,7 @@ import AppKit
 import SPFKBase
 import SPFKUtils
 
-extension PlaylistDataDTO {
+extension Playlist {
     public mutating func update(all newData: [PlaylistElement]) {
         elements = newData
 

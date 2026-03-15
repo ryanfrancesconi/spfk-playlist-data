@@ -5,7 +5,7 @@ import SPFKBase
 import SPFKMetadataBase
 import SPFKUtils
 
-extension PlaylistElementDTO: Codable, Serializable {
+extension PlaylistElement: Codable, Serializable {
     enum CodingKeys: String, CodingKey {
         case bookmarkData
         case mafDescription

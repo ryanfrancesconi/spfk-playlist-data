@@ -3,10 +3,8 @@
 import Foundation
 import SPFKBase
 
-public typealias PlaylistData = PlaylistDataDTO
-
-public struct PlaylistDataDTO: Sendable, Hashable, Equatable {
-    public static func == (lhs: PlaylistDataDTO, rhs: PlaylistDataDTO) -> Bool {
+public struct Playlist: Sendable, Hashable, Equatable {
+    public static func == (lhs: Playlist, rhs: Playlist) -> Bool {
         lhs.uuid == rhs.uuid &&
             lhs.elements == rhs.elements &&
             lhs.selectedRowIndexes == rhs.selectedRowIndexes &&
@@ -20,7 +18,7 @@ public struct PlaylistDataDTO: Sendable, Hashable, Equatable {
 
     /// A custom image for this playlist
     public var imageData: Data?
-    public var elements: [PlaylistElementDTO]
+    public var elements: [PlaylistElement]
     public var selectedRowIndexes: [Int]?
     public var tableColumns: [String]?
     public var sortIndex: Int?
@@ -32,7 +30,7 @@ public struct PlaylistDataDTO: Sendable, Hashable, Equatable {
         collectionType: CollectionType,
         imageData: Data? = nil,
         selectedRowIndexes: [Int]? = nil,
-        elements: [PlaylistElementDTO] = [],
+        elements: [PlaylistElement] = [],
         tableColumns: [String]? = nil,
         sortIndex: Int? = nil,
     ) {
@@ -50,7 +48,7 @@ public struct PlaylistDataDTO: Sendable, Hashable, Equatable {
     }
 }
 
-extension PlaylistDataDTO: Codable, Serializable {
+extension Playlist: Codable, Serializable {
     enum CodingKeys: String, CodingKey {
         case uuid
         case version
@@ -68,7 +66,7 @@ extension PlaylistDataDTO: Codable, Serializable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         uuid = try container.decode(UUID.self, forKey: .uuid)
-        elements = try container.decode([PlaylistElementDTO].self, forKey: .elements)
+        elements = try container.decode([PlaylistElement].self, forKey: .elements)
         title = try container.decode(String.self, forKey: .title)
         isEditable = try container.decode(Bool.self, forKey: .isEditable)
         collectionType = try container.decode(CollectionType.self, forKey: .collectionType)

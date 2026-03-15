@@ -1,12 +1,12 @@
 import Foundation
 
-extension PlaylistDataDTO {
-    public static func createPlaylist(named title: String? = nil) -> PlaylistDataDTO {
+extension Playlist {
+    public static func createPlaylist(named title: String? = nil) -> Playlist {
         .init(uuid: UUID(), title: title ?? "New Playlist", isEditable: true, collectionType: .user)
     }
 }
 
-extension PlaylistDataDTO {
+extension Playlist {
     public func count() -> Int { elements.count }
 
     public func contains(index: Int) -> Bool {

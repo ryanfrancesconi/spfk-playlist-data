@@ -5,12 +5,10 @@ import SPFKMetadataBase
 import SPFKSearch
 import SPFKUtils
 
-public typealias PlaylistElement = PlaylistElementDTO
-
-public struct PlaylistElementDTO: Sendable, Hashable, Equatable {
+public struct PlaylistElement: Sendable, Hashable, Equatable {
     /// Identity is URL-only. Two elements referencing the same file are equal
     /// regardless of metadata or color differences.
-    public static func == (lhs: PlaylistElementDTO, rhs: PlaylistElementDTO) -> Bool {
+    public static func == (lhs: PlaylistElement, rhs: PlaylistElement) -> Bool {
         lhs.url == rhs.url
     }
 
@@ -90,9 +88,9 @@ public struct PlaylistElementDTO: Sendable, Hashable, Equatable {
     }
 }
 
-extension PlaylistElementDTO: Searchable {}
+extension PlaylistElement: Searchable {}
 
-extension PlaylistElementDTO {
+extension PlaylistElement {
     private func createSearchString() -> SearchableValue {
         var out: [String] = [filenameNoExtension]
 

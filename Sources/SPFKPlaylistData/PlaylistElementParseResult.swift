@@ -8,14 +8,14 @@ public typealias PlaylistElementParseResultEventHandler = @Sendable (PlaylistEle
 
 public struct PlaylistElementParseResult: Sendable {
     public let url: URL
-    public let element: PlaylistElementDTO?
+    public let element: PlaylistElement?
     public let error: Error?
 
     public var thumbnailImage: CGImage? {
         element?.mafDescription.imageDescription.thumbnailImage
     }
 
-    public init(url: URL, element: PlaylistElementDTO?, error: Error?) {
+    public init(url: URL, element: PlaylistElement?, error: Error?) {
         self.url = url
         self.element = element
         self.error = error
@@ -23,7 +23,7 @@ public struct PlaylistElementParseResult: Sendable {
 }
 
 extension [PlaylistElementParseResult] {
-    public var elements: [PlaylistElementDTO] {
+    public var elements: [PlaylistElement] {
         compactMap(\.element)
     }
 

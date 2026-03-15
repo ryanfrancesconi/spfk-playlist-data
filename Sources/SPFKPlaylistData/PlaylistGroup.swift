@@ -2,9 +2,7 @@
 
 import Foundation
 
-public typealias PlaylistGroup = PlaylistGroupDTO
-
-public struct PlaylistGroupDTO: Sendable, Hashable, Equatable {
+public struct PlaylistGroup: Sendable, Hashable, Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.uuid == rhs.uuid
     }
@@ -13,7 +11,7 @@ public struct PlaylistGroupDTO: Sendable, Hashable, Equatable {
     public var title: String
     public var isEditable: Bool
     public var collectionType: CollectionType
-    public var playlists: [PlaylistDataDTO]
+    public var playlists: [Playlist]
     public var sortIndex: Int?
 
     public var titleAndID: String {
@@ -31,7 +29,7 @@ public struct PlaylistGroupDTO: Sendable, Hashable, Equatable {
         title: String,
         isEditable: Bool = true,
         collectionType: CollectionType,
-        playlists: [PlaylistDataDTO] = [],
+        playlists: [Playlist] = [],
         sortIndex: Int? = nil
     ) {
         self.uuid = uuid
@@ -49,7 +47,7 @@ public struct PlaylistGroupDTO: Sendable, Hashable, Equatable {
     }
 }
 
-extension PlaylistGroupDTO: Codable {
+extension PlaylistGroup: Codable {
     enum CodingKeys: String, CodingKey {
         case uuid
         case title
@@ -63,7 +61,7 @@ extension PlaylistGroupDTO: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         uuid = try container.decode(UUID.self, forKey: .uuid)
-        playlists = try container.decode([PlaylistDataDTO].self, forKey: .playlists)
+        playlists = try container.decode([Playlist].self, forKey: .playlists)
         title = try container.decode(String.self, forKey: .title)
         isEditable = try container.decode(Bool.self, forKey: .isEditable)
         collectionType = try container.decode(CollectionType.self, forKey: .collectionType)
@@ -86,8 +84,8 @@ extension PlaylistGroupDTO: Codable {
     }
 }
 
-extension PlaylistGroupDTO {
-    public static func createGroup(named title: String? = nil) -> PlaylistGroupDTO {
+extension PlaylistGroup {
+    public static func createGroup(named title: String? = nil) -> PlaylistGroup {
         .init(uuid: UUID(), title: title ?? "New Group", isEditable: true, collectionType: .user)
     }
 }

@@ -1,7 +1,7 @@
 import AppKit
 import SPFKBase
 
-extension PlaylistDataDTO {
+extension Playlist {
     public mutating func cache(cgImage: CGImage, for url: URL) throws {
         guard let index = index(of: url) else {
             throw NSError(file: #file, function: #function, description: "invalid url passed to function")
@@ -19,7 +19,7 @@ extension PlaylistDataDTO {
     }
 }
 
-extension PlaylistDataDTO {
+extension Playlist {
     /// Refreshes security-scoped bookmark data for every element.
     public mutating func updateBookmarks() {
         for i in 0 ..< elements.count {
