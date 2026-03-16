@@ -54,9 +54,9 @@ extension PlaylistElement {
 
         case .markers:
             let count = mafDescription.markerCollection.markerDescriptions.count
-            let countString = count == 0 ? "No" : count.string
+            guard count > 0 else { return nil }
 
-            return "\(countString) Marker\(mafDescription.markerCollection.markerDescriptions.pluralString)"
+            return "\(count) Marker\(mafDescription.markerCollection.markerDescriptions.pluralString)"
         }
     }
 

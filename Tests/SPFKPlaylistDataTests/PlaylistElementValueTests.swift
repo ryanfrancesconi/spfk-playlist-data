@@ -41,7 +41,7 @@ final class PlaylistElementValueTests: TestCaseModel {
     @Test func markersWithNoMarkers() throws {
         let element = try makeElement()
         let value = element.stringValue(column: .markers)
-        #expect(value == "No Markers")
+        #expect(value == nil)
     }
 
     @Test func markersWithMultipleMarkers() throws {
