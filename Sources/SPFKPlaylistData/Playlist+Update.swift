@@ -9,23 +9,29 @@ extension Playlist {
         updateSortIndexes()
     }
 
-    public mutating func update(element: PlaylistElement, needsSave: Bool) throws -> Int {
+    public mutating func update(element: PlaylistElement, isDirty: Bool) throws -> Int {
         for i in 0 ..< elements.count where elements[i].url == element.url {
-            try update(element: element, at: i, needsSave: needsSave)
+            try update(element: element, at: i, isDirty: isDirty)
             return i
         }
 
         throw NSError(file: #file, function: #function, description: "Failed to find element in table data")
     }
 
-    public mutating func update(element: PlaylistElement, at index: Int, needsSave: Bool) throws {
+    public mutating func update(element: PlaylistElement, at index: Int, isDirty: Bool) throws {
         guard contains(index: index) else {
             throw NSError(description: "invalid row \(index)")
         }
 
-        elements[index] = element
-        elements[index].needsSave = needsSave
+        // don't update if the urls don't match
+        assert(elements[index] == element)
+
         elements[index].sortIndex = index
+
+        elements[index] = element
+        
+        // TODO: CLAUDE - audit `isDirty` after edit operations. Need to verify the element has in fact changed. Currently set to true regardless of change state
+        elements[index].isDirty = isDirty
     }
 
     public mutating func insert(

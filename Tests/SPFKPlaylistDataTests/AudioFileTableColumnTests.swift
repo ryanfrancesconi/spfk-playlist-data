@@ -142,7 +142,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func cellStyleFileColumnDirty() {
-        let style = AudioFileTableColumn.file.cellStyle(needsSave: true)
+        let style = AudioFileTableColumn.file.cellStyle(isDirty: true)
         #expect(style.showsImage == true)
         #expect(style.textColorRole == .primary)
         #expect(style.isItalic == true)
@@ -161,18 +161,18 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func cellStyleStandardColumnsDirty() {
-        let style = AudioFileTableColumn.type.cellStyle(needsSave: true)
+        let style = AudioFileTableColumn.type.cellStyle(isDirty: true)
         #expect(style.isItalic == true)
         #expect(style.textColorRole == .secondary)
     }
 
     @Test func cellStyleNumberIgnoresNeedsSave() {
-        let style = AudioFileTableColumn.number.cellStyle(needsSave: true)
+        let style = AudioFileTableColumn.number.cellStyle(isDirty: true)
         #expect(style.isItalic == false)
     }
 
     @Test func cellStyleFinderTagsIgnoresNeedsSave() {
-        let style = AudioFileTableColumn.finderTags.cellStyle(needsSave: true)
+        let style = AudioFileTableColumn.finderTags.cellStyle(isDirty: true)
         #expect(style.isItalic == false)
     }
 
@@ -193,7 +193,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func cellStyleForTagColumnTitleDirty() {
-        let style = AudioFileTableColumn.cellStyle(forColumnTitled: "Artist", needsSave: true)
+        let style = AudioFileTableColumn.cellStyle(forColumnTitled: "Artist", isDirty: true)
         #expect(style.isItalic == true)
     }
 

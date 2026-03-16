@@ -48,19 +48,19 @@ final class PlaylistUpdateTests: TestCaseModel {
         }
     }
 
-    // MARK: - update(element:needsSave:) — by URL
+    // MARK: - update(element:isDirty:) — by URL
 
     @Test func updateByURLFindsAndUpdates() throws {
         let urls = Array(TestBundleResources.shared.formats.prefix(3))
         var playlist = try makePlaylist(urls: urls)
 
         var element = playlist.elements[1]
-        element.needsSave = false
+        element.isDirty = false
 
-        let index = try playlist.update(element: element, needsSave: true)
+        let index = try playlist.update(element: element, isDirty: true)
 
         #expect(index == 1)
-        #expect(playlist.elements[1].needsSave == true)
+        #expect(playlist.elements[1].isDirty == true)
     }
 
     @Test func updateByURLThrowsWhenNotFound() throws {
@@ -70,22 +70,22 @@ final class PlaylistUpdateTests: TestCaseModel {
         let missingElement = try PlaylistElement(mafDescription: .init(url: TestBundleResources.shared.cowbell_wav))
 
         #expect(throws: Error.self) {
-            try playlist.update(element: missingElement, needsSave: false)
+            try playlist.update(element: missingElement, isDirty: false)
         }
     }
 
-    // MARK: - update(element:at:needsSave:) — by index
+    // MARK: - update(element:at:isDirty:) — by index
 
     @Test func updateAtIndexSetsNeedsSaveAndSortIndex() throws {
         let urls = Array(TestBundleResources.shared.formats.prefix(3))
         var playlist = try makePlaylist(urls: urls)
 
         var element = playlist.elements[2]
-        element.needsSave = false
+        element.isDirty = false
 
-        try playlist.update(element: element, at: 2, needsSave: true)
+        try playlist.update(element: element, at: 2, isDirty: true)
 
-        #expect(playlist.elements[2].needsSave == true)
+        #expect(playlist.elements[2].isDirty == true)
         #expect(playlist.elements[2].sortIndex == 2)
     }
 
@@ -96,7 +96,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         let element = playlist.elements[0]
 
         #expect(throws: Error.self) {
-            try playlist.update(element: element, at: 5, needsSave: false)
+            try playlist.update(element: element, at: 5, isDirty: false)
         }
     }
 

@@ -77,31 +77,31 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
     }
 
     /// Returns the cell style for a column given the element's dirty state.
-    /// - Parameter needsSave: whether the element has unsaved changes (used for italic font).
-    public func cellStyle(needsSave: Bool = false) -> CellStyle {
+    /// - Parameter isDirty: whether the element has unsaved changes (used for italic font).
+    public func cellStyle(isDirty: Bool = false) -> CellStyle {
         switch self {
         case .number:
-            return CellStyle(kind: .number, showsImage: false, textColorRole: .secondary, isItalic: false)
+            CellStyle(kind: .number, showsImage: false, textColorRole: .secondary, isItalic: false)
         case .finderTags:
-            return CellStyle(kind: .finderTags, showsImage: false, textColorRole: .secondary, isItalic: false)
+            CellStyle(kind: .finderTags, showsImage: false, textColorRole: .secondary, isItalic: false)
         case .file:
-            return CellStyle(kind: .standard, showsImage: true, textColorRole: .primary, isItalic: needsSave)
+            CellStyle(kind: .standard, showsImage: true, textColorRole: .primary, isItalic: isDirty)
         default:
-            return CellStyle(kind: .standard, showsImage: false, textColorRole: .secondary, isItalic: needsSave)
+            CellStyle(kind: .standard, showsImage: false, textColorRole: .secondary, isItalic: isDirty)
         }
     }
 
     /// Returns the cell style for an arbitrary column title, falling back to a standard secondary style.
     /// - Parameters:
     ///   - columnTitle: the column's display name.
-    ///   - needsSave: whether the element has unsaved changes.
-    public static func cellStyle(forColumnTitled columnTitle: String, needsSave: Bool = false) -> CellStyle {
+    ///   - isDirty: whether the element has unsaved changes.
+    public static func cellStyle(forColumnTitled columnTitle: String, isDirty: Bool = false) -> CellStyle {
         if let column = AudioFileTableColumn(displayName: columnTitle) {
-            return column.cellStyle(needsSave: needsSave)
+            return column.cellStyle(isDirty: isDirty)
         }
 
         // Tag/metadata columns — standard text, no image
-        return CellStyle(kind: .standard, showsImage: false, textColorRole: .secondary, isItalic: needsSave)
+        return CellStyle(kind: .standard, showsImage: false, textColorRole: .secondary, isItalic: isDirty)
     }
 
     /// Returns the index of the first column title that is not a standard `AudioFileTableColumn`,

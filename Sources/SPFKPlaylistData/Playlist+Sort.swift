@@ -16,6 +16,8 @@ extension Playlist {
         }
     }
 
+    // TODO: CLAUDE
+    // audit Playlist+Sort.swift:21 - keeping PlaylistElement.sortIndex in sync
     public mutating func updateSortIndexes() {
         for i in 0 ..< elements.count {
             elements[i].sortIndex = i

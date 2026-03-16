@@ -12,7 +12,7 @@ extension PlaylistElement: Codable, Serializable {
         case hexColor
         case imageDescription
         case sortIndex
-        case needsSave
+        case isDirty
     }
 
     public init(from decoder: any Decoder) throws {
@@ -24,7 +24,7 @@ extension PlaylistElement: Codable, Serializable {
         hexColor = try? container.decodeIfPresent(HexColor.self, forKey: .hexColor)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
 
-        needsSave = try (container.decodeIfPresent(Bool.self, forKey: .needsSave)) == true
+        isDirty = try (container.decodeIfPresent(Bool.self, forKey: .isDirty)) == true
 
         invalidateSearch()
     }
@@ -39,6 +39,6 @@ extension PlaylistElement: Codable, Serializable {
         try container.encodeIfPresent(bookmarkData, forKey: .bookmarkData)
         try container.encodeIfPresent(hexColor, forKey: .hexColor)
         try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
-        try container.encodeIfPresent(needsSave, forKey: .needsSave)
+        try container.encodeIfPresent(isDirty, forKey: .isDirty)
     }
 }

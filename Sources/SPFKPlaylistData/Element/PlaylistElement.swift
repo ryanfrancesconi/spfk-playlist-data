@@ -34,8 +34,8 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
     public var sortIndex: Int?
 
     /// mark as dirty
-    public var needsSave: Bool = false
-    public var imageNeedsSave: Bool = false
+    public var isDirty: Bool = false
+    public var isImageDirty: Bool = false
 
     // MARK: - Transients - not included in codable
 

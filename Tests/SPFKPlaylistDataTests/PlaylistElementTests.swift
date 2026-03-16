@@ -76,13 +76,13 @@ final class PlaylistElementTests: TestCaseModel {
         #expect(element.filenameNoExtension == url.deletingPathExtension().lastPathComponent)
     }
 
-    // MARK: - needsSave
+    // MARK: - isDirty
 
-    @Test func needsSaveDefaultsFalse() throws {
+    @Test func isDirtyDefaultsFalse() throws {
         let url = TestBundleResources.shared.tabla_wav
         let element = try PlaylistElement(mafDescription: .init(url: url))
 
-        #expect(element.needsSave == false)
+        #expect(element.isDirty == false)
     }
 
     // MARK: - Codable
@@ -112,23 +112,23 @@ final class PlaylistElementTests: TestCaseModel {
     @Test func codableNeedsSaveDecodesAsFalseWhenMissing() throws {
         let url = TestBundleResources.shared.tabla_wav
         var original = try PlaylistElement(mafDescription: .init(url: url))
-        original.needsSave = false
+        original.isDirty = false
 
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
 
-        #expect(decoded.needsSave == false)
+        #expect(decoded.isDirty == false)
     }
 
     @Test func codableNeedsSavePreservesTrue() throws {
         let url = TestBundleResources.shared.tabla_wav
         var original = try PlaylistElement(mafDescription: .init(url: url))
-        original.needsSave = true
+        original.isDirty = true
 
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
 
-        #expect(decoded.needsSave == true)
+        #expect(decoded.isDirty == true)
     }
 
     // MARK: - Search
