@@ -26,12 +26,24 @@ extension Playlist {
         // don't update if the urls don't match
         assert(elements[index] == element)
 
-        elements[index].sortIndex = index
+        let existing = elements[index]
 
         elements[index] = element
-        
-        // TODO: CLAUDE - audit `isDirty` after edit operations. Need to verify the element has in fact changed. Currently set to true regardless of change state
-        elements[index].isDirty = isDirty
+        elements[index].sortIndex = index
+
+        if isDirty {
+            // Only mark dirty if saveable content actually changed.
+            // Compare metadata excluding imageDescription (whose thumbnail PNG
+            // bytes are non-deterministic across re-encodes). Image changes are
+            // tracked via isImageDirty on the incoming element — factor that in.
+            let metadataChanged = !existing.mafDescription.isEqualExcludingImage(to: element.mafDescription)
+            let colorChanged = existing.hexColor != element.hexColor
+            let imageChanged = element.isImageDirty
+            elements[index].isDirty = metadataChanged || colorChanged || imageChanged
+        } else {
+            // Caller explicitly clearing dirty (e.g. after save) — always honor
+            elements[index].isDirty = false
+        }
     }
 
     public mutating func insert(

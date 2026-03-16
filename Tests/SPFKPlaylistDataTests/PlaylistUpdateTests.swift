@@ -2,7 +2,9 @@
 
 import Foundation
 import SPFKBase
+import SPFKMetadataBase
 import SPFKTesting
+import SPFKUtils
 import Testing
 
 @testable import SPFKPlaylistData
@@ -55,7 +57,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         var playlist = try makePlaylist(urls: urls)
 
         var element = playlist.elements[1]
-        element.isDirty = false
+        element.mafDescription.set(tag: .title, value: "Changed")
 
         let index = try playlist.update(element: element, isDirty: true)
 
@@ -76,12 +78,12 @@ final class PlaylistUpdateTests: TestCaseModel {
 
     // MARK: - update(element:at:isDirty:) — by index
 
-    @Test func updateAtIndexSetsNeedsSaveAndSortIndex() throws {
+    @Test func updateAtIndexSetsIsDirtyAndSortIndex() throws {
         let urls = Array(TestBundleResources.shared.formats.prefix(3))
         var playlist = try makePlaylist(urls: urls)
 
         var element = playlist.elements[2]
-        element.isDirty = false
+        element.mafDescription.set(tag: .title, value: "Changed")
 
         try playlist.update(element: element, at: 2, isDirty: true)
 
@@ -98,6 +100,87 @@ final class PlaylistUpdateTests: TestCaseModel {
         #expect(throws: Error.self) {
             try playlist.update(element: element, at: 5, isDirty: false)
         }
+    }
+
+    // MARK: - isDirty comparison
+
+    @Test func updateUnchangedElementStaysClean() throws {
+        let urls = Array(TestBundleResources.shared.formats.prefix(3))
+        var playlist = try makePlaylist(urls: urls)
+
+        // Same element, no content changes — isDirty should remain false
+        let element = playlist.elements[1]
+        try playlist.update(element: element, at: 1, isDirty: true)
+
+        #expect(playlist.elements[1].isDirty == false)
+    }
+
+    @Test func updateChangedElementBecomesDirty() throws {
+        let urls = Array(TestBundleResources.shared.formats.prefix(3))
+        var playlist = try makePlaylist(urls: urls)
+
+        var element = playlist.elements[1]
+        element.mafDescription.set(tag: .artist, value: "New Artist")
+
+        try playlist.update(element: element, at: 1, isDirty: true)
+
+        #expect(playlist.elements[1].isDirty == true)
+    }
+
+    @Test func updateClearsDirtyRegardlessOfContent() throws {
+        let urls = Array(TestBundleResources.shared.formats.prefix(3))
+        var playlist = try makePlaylist(urls: urls)
+
+        // First, make the element dirty by changing content
+        var element = playlist.elements[1]
+        element.mafDescription.set(tag: .title, value: "Modified")
+        try playlist.update(element: element, at: 1, isDirty: true)
+        #expect(playlist.elements[1].isDirty == true)
+
+        // Now clear dirty with isDirty: false (simulates save)
+        let saved = playlist.elements[1]
+        try playlist.update(element: saved, at: 1, isDirty: false)
+        #expect(playlist.elements[1].isDirty == false)
+    }
+
+    @Test func updateImageDescriptionDriftDoesNotMarkDirty() throws {
+        let urls = Array(TestBundleResources.shared.formats.prefix(3))
+        var playlist = try makePlaylist(urls: urls)
+
+        // Simulate non-deterministic thumbnail re-encode: imageDescription differs
+        // but isImageDirty is NOT set (no actual image change occurred)
+        var element = playlist.elements[1]
+        element.mafDescription.imageDescription.description = "Front Cover"
+
+        try playlist.update(element: element, at: 1, isDirty: true)
+
+        #expect(playlist.elements[1].isDirty == false)
+    }
+
+    @Test func updateWithIsImageDirtyMarksDirty() throws {
+        let urls = Array(TestBundleResources.shared.formats.prefix(3))
+        var playlist = try makePlaylist(urls: urls)
+
+        // Simulate a real image change: isImageDirty is set by the coordinator
+        var element = playlist.elements[1]
+        element.isImageDirty = true
+
+        try playlist.update(element: element, at: 1, isDirty: true)
+
+        #expect(playlist.elements[1].isDirty == true)
+        #expect(playlist.elements[1].isImageDirty == true)
+    }
+
+    @Test func updateColorChangeMarksAsDirty() throws {
+        let urls = Array(TestBundleResources.shared.formats.prefix(3))
+        var playlist = try makePlaylist(urls: urls)
+
+        var element = playlist.elements[0]
+        element.hexColor = HexColor(red: 1, green: 0, blue: 0)
+
+        try playlist.update(element: element, at: 0, isDirty: true)
+
+        #expect(playlist.elements[0].isDirty == true)
     }
 
     // MARK: - insert(elements:at:)

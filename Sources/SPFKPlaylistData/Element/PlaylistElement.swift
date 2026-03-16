@@ -33,7 +33,6 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
 
     public var sortIndex: Int?
 
-    /// mark as dirty
     public var isDirty: Bool = false
     public var isImageDirty: Bool = false
 
