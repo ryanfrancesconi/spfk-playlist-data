@@ -1,5 +1,8 @@
 # SPFKPlaylistData
 
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fryanfrancesconi%2Fspfk-playlist-data%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/ryanfrancesconi/spfk-playlist-data)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fryanfrancesconi%2Fspfk-playlist-data%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/ryanfrancesconi/spfk-playlist-data)
+
 Lightweight playlist data types and definitions extracted from [SPFKData](https://github.com/ryanfrancesconi/spfk-data). Depends on [SPFKMetadataBase](https://github.com/ryanfrancesconi/spfk-metadata-base) for metadata types — no TagLib, libsndfile, or C++ dependency.
 
 File I/O operations (parsing audio files into playlist elements, importing, searching) remain in [SPFKData](https://github.com/ryanfrancesconi/spfk-data).
