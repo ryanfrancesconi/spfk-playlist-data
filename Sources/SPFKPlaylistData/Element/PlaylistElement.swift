@@ -35,6 +35,7 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
 
     public var isDirty: Bool = false
     public var isImageDirty: Bool = false
+    public var isXmpDirty: Bool = false
 
     // MARK: - Transients - not included in codable
 

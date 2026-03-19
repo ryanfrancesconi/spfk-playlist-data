@@ -85,6 +85,35 @@ final class PlaylistElementTests: TestCaseModel {
         #expect(element.isDirty == false)
     }
 
+    // MARK: - isImageDirty
+
+    @Test func isImageDirtyDefaultsFalse() throws {
+        let url = TestBundleResources.shared.tabla_wav
+        let element = try PlaylistElement(mafDescription: .init(url: url))
+
+        #expect(element.isImageDirty == false)
+    }
+
+    // MARK: - isXmpDirty
+
+    @Test func isXmpDirtyDefaultsFalse() throws {
+        let url = TestBundleResources.shared.tabla_wav
+        let element = try PlaylistElement(mafDescription: .init(url: url))
+
+        #expect(element.isXmpDirty == false)
+    }
+
+    @Test func isXmpDirtyIsSettable() throws {
+        let url = TestBundleResources.shared.tabla_wav
+        var element = try PlaylistElement(mafDescription: .init(url: url))
+
+        element.isXmpDirty = true
+        #expect(element.isXmpDirty == true)
+
+        element.isXmpDirty = false
+        #expect(element.isXmpDirty == false)
+    }
+
     // MARK: - Codable
 
     @Test func codableRoundTrip() throws {
@@ -129,6 +158,30 @@ final class PlaylistElementTests: TestCaseModel {
         let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
 
         #expect(decoded.isDirty == true)
+    }
+
+    @Test func codableExcludesIsXmpDirty() throws {
+        let url = TestBundleResources.shared.tabla_wav
+        var original = try PlaylistElement(mafDescription: .init(url: url))
+        original.isXmpDirty = true
+
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
+
+        // isXmpDirty is transient — not included in CodingKeys
+        #expect(decoded.isXmpDirty == false)
+    }
+
+    @Test func codableExcludesIsImageDirty() throws {
+        let url = TestBundleResources.shared.tabla_wav
+        var original = try PlaylistElement(mafDescription: .init(url: url))
+        original.isImageDirty = true
+
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
+
+        // isImageDirty is transient — not included in CodingKeys
+        #expect(decoded.isImageDirty == false)
     }
 
     // MARK: - Search
