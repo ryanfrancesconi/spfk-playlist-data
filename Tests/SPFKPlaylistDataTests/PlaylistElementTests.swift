@@ -85,33 +85,26 @@ final class PlaylistElementTests: TestCaseModel {
         #expect(element.isDirty == false)
     }
 
-    // MARK: - isImageDirty
+    // MARK: - dirtyFlags
 
-    @Test func isImageDirtyDefaultsFalse() throws {
+    @Test func dirtyFlagsDefaultEmpty() throws {
         let url = TestBundleResources.shared.tabla_wav
         let element = try PlaylistElement(mafDescription: .init(url: url))
 
-        #expect(element.isImageDirty == false)
+        #expect(element.dirtyFlags.isEmpty)
+        #expect(!element.dirtyFlags.contains(.image))
+        #expect(!element.dirtyFlags.contains(.xmp))
     }
 
-    // MARK: - isXmpDirty
-
-    @Test func isXmpDirtyDefaultsFalse() throws {
-        let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: .init(url: url))
-
-        #expect(element.isXmpDirty == false)
-    }
-
-    @Test func isXmpDirtyIsSettable() throws {
+    @Test func dirtyFlagsAreSettable() throws {
         let url = TestBundleResources.shared.tabla_wav
         var element = try PlaylistElement(mafDescription: .init(url: url))
 
-        element.isXmpDirty = true
-        #expect(element.isXmpDirty == true)
+        element.dirtyFlags.insert(.xmp)
+        #expect(element.dirtyFlags.contains(.xmp))
 
-        element.isXmpDirty = false
-        #expect(element.isXmpDirty == false)
+        element.dirtyFlags.remove(.xmp)
+        #expect(!element.dirtyFlags.contains(.xmp))
     }
 
     // MARK: - Codable
@@ -138,50 +131,36 @@ final class PlaylistElementTests: TestCaseModel {
         #expect(decoded.hexColor == hexColor)
     }
 
-    @Test func codableNeedsSaveDecodesAsFalseWhenMissing() throws {
+    @Test func codableDirtyFlagsEmptyWhenNoneSet() throws {
         let url = TestBundleResources.shared.tabla_wav
-        var original = try PlaylistElement(mafDescription: .init(url: url))
-        original.isDirty = false
+        let original = try PlaylistElement(mafDescription: .init(url: url))
 
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
 
-        #expect(decoded.isDirty == false)
+        #expect(decoded.dirtyFlags.isEmpty)
     }
 
-    @Test func codableNeedsSavePreservesTrue() throws {
+    @Test func codableDirtyFlagsPreserved() throws {
         let url = TestBundleResources.shared.tabla_wav
         var original = try PlaylistElement(mafDescription: .init(url: url))
-        original.isDirty = true
+        original.dirtyFlags = [.metadata, .xmp]
 
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
 
-        #expect(decoded.isDirty == true)
+        #expect(decoded.dirtyFlags == [.metadata, .xmp])
     }
 
-    @Test func codableExcludesIsXmpDirty() throws {
+    @Test func codableAllDirtyFlagsRoundTrip() throws {
         let url = TestBundleResources.shared.tabla_wav
         var original = try PlaylistElement(mafDescription: .init(url: url))
-        original.isXmpDirty = true
+        original.dirtyFlags = [.metadata, .image, .xmp, .markers]
 
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
 
-        // isXmpDirty is transient — not included in CodingKeys
-        #expect(decoded.isXmpDirty == false)
-    }
-
-    @Test func codableExcludesIsImageDirty() throws {
-        let url = TestBundleResources.shared.tabla_wav
-        var original = try PlaylistElement(mafDescription: .init(url: url))
-        original.isImageDirty = true
-
-        let data = try JSONEncoder().encode(original)
-        let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
-
-        // isImageDirty is transient — not included in CodingKeys
-        #expect(decoded.isImageDirty == false)
+        #expect(decoded.dirtyFlags == [.metadata, .image, .xmp, .markers])
     }
 
     // MARK: - Search

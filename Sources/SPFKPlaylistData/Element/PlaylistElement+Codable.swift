@@ -12,7 +12,7 @@ extension PlaylistElement: Codable, Serializable {
         case hexColor
         case imageDescription
         case sortIndex
-        case isDirty
+        case dirtyFlags
     }
 
     public init(from decoder: any Decoder) throws {
@@ -24,7 +24,9 @@ extension PlaylistElement: Codable, Serializable {
         hexColor = try? container.decodeIfPresent(HexColor.self, forKey: .hexColor)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
 
-        isDirty = try (container.decodeIfPresent(Bool.self, forKey: .isDirty)) == true
+        if let flags = try container.decodeIfPresent(Set<MetadataDirtyFlag>.self, forKey: .dirtyFlags) {
+            dirtyFlags = flags
+        }
 
         invalidateSearch()
     }
@@ -39,6 +41,9 @@ extension PlaylistElement: Codable, Serializable {
         try container.encodeIfPresent(bookmarkData, forKey: .bookmarkData)
         try container.encodeIfPresent(hexColor, forKey: .hexColor)
         try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
-        try container.encodeIfPresent(isDirty, forKey: .isDirty)
+
+        if !dirtyFlags.isEmpty {
+            try container.encode(dirtyFlags, forKey: .dirtyFlags)
+        }
     }
 }

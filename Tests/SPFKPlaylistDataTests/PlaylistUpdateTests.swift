@@ -157,18 +157,32 @@ final class PlaylistUpdateTests: TestCaseModel {
         #expect(playlist.elements[1].isDirty == false)
     }
 
-    @Test func updateWithIsImageDirtyMarksDirty() throws {
+    @Test func updateWithImageDirtyFlagMarksDirty() throws {
         let urls = Array(TestBundleResources.shared.formats.prefix(3))
         var playlist = try makePlaylist(urls: urls)
 
-        // Simulate a real image change: isImageDirty is set by the coordinator
+        // Simulate a real image change: .image flag is set by the coordinator
         var element = playlist.elements[1]
-        element.isImageDirty = true
+        element.dirtyFlags.insert(.image)
 
         try playlist.update(element: element, at: 1, isDirty: true)
 
         #expect(playlist.elements[1].isDirty == true)
-        #expect(playlist.elements[1].isImageDirty == true)
+        #expect(playlist.elements[1].dirtyFlags.contains(.image))
+    }
+
+    @Test func updateCarriesOverMarkersFlag() throws {
+        let urls = Array(TestBundleResources.shared.formats.prefix(3))
+        var playlist = try makePlaylist(urls: urls)
+
+        // Simulate a marker change: .markers flag is set by the coordinator
+        var element = playlist.elements[1]
+        element.dirtyFlags.insert(.markers)
+
+        try playlist.update(element: element, at: 1, isDirty: true)
+
+        #expect(playlist.elements[1].isDirty == true)
+        #expect(playlist.elements[1].dirtyFlags.contains(.markers))
     }
 
     @Test func updateColorChangeMarksAsDirty() throws {

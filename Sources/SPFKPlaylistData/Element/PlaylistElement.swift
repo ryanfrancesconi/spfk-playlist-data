@@ -33,9 +33,10 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
 
     public var sortIndex: Int?
 
-    public var isDirty: Bool = false
-    public var isImageDirty: Bool = false
-    public var isXmpDirty: Bool = false
+    public var dirtyFlags: Set<MetadataDirtyFlag> = []
+
+    /// Whether any unsaved changes exist.
+    public var isDirty: Bool { !dirtyFlags.isEmpty }
 
     // MARK: - Transients - not included in codable
 

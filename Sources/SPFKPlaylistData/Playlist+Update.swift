@@ -35,14 +35,19 @@ extension Playlist {
             // Only mark dirty if saveable content actually changed.
             // Compare metadata excluding imageDescription (whose thumbnail PNG
             // bytes are non-deterministic across re-encodes). Image changes are
-            // tracked via isImageDirty on the incoming element — factor that in.
+            // tracked via the .image flag on the incoming element.
             let metadataChanged = !existing.mafDescription.isEqualExcludingImage(to: element.mafDescription)
             let colorChanged = existing.hexColor != element.hexColor
-            let imageChanged = element.isImageDirty
-            elements[index].isDirty = metadataChanged || colorChanged || imageChanged
+
+            if metadataChanged || colorChanged {
+                elements[index].dirtyFlags.insert(.metadata)
+            }
+
+            // Carry over image, xmp, and markers flags from the incoming element
+            elements[index].dirtyFlags.formUnion(element.dirtyFlags.intersection([.image, .xmp, .markers]))
         } else {
             // Caller explicitly clearing dirty (e.g. after save) — always honor
-            elements[index].isDirty = false
+            elements[index].dirtyFlags = []
         }
     }
 
