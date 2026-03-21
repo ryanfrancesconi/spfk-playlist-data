@@ -1,6 +1,7 @@
 // Copyright Ryan Francesconi. All Rights Reserved. Revision History at https://github.com/ryanfrancesconi/spfk-data
 
 import Foundation
+import SPFKUtils
 
 public struct PlaylistGroup: Sendable, Hashable, Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -11,6 +12,7 @@ public struct PlaylistGroup: Sendable, Hashable, Equatable {
     public var title: String
     public var isEditable: Bool
     public var collectionType: CollectionType
+    public var hexColor: HexColor?
     public var playlists: [Playlist]
     public var sortIndex: Int?
 
@@ -29,6 +31,7 @@ public struct PlaylistGroup: Sendable, Hashable, Equatable {
         title: String,
         isEditable: Bool = true,
         collectionType: CollectionType,
+        hexColor: HexColor? = nil,
         playlists: [Playlist] = [],
         sortIndex: Int? = nil
     ) {
@@ -36,6 +39,7 @@ public struct PlaylistGroup: Sendable, Hashable, Equatable {
         self.title = title
         self.isEditable = isEditable
         self.collectionType = collectionType
+        self.hexColor = hexColor
         self.playlists = playlists
         self.sortIndex = sortIndex
     }
@@ -53,6 +57,7 @@ extension PlaylistGroup: Codable {
         case title
         case isEditable
         case collectionType
+        case hexColor
         case playlists
         case sortIndex
     }
@@ -67,6 +72,7 @@ extension PlaylistGroup: Codable {
         collectionType = try container.decode(CollectionType.self, forKey: .collectionType)
 
         // optionals
+        hexColor = try? container.decodeIfPresent(HexColor.self, forKey: .hexColor)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
     }
 
@@ -80,6 +86,7 @@ extension PlaylistGroup: Codable {
         try container.encode(collectionType, forKey: .collectionType)
 
         // optionals
+        try container.encodeIfPresent(hexColor, forKey: .hexColor)
         try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
     }
 }

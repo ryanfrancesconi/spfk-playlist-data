@@ -2,6 +2,7 @@
 
 import Foundation
 import SPFKBase
+import SPFKUtils
 
 public struct Playlist: Sendable, Hashable, Equatable {
     public static func == (lhs: Playlist, rhs: Playlist) -> Bool {
@@ -18,6 +19,7 @@ public struct Playlist: Sendable, Hashable, Equatable {
 
     /// A custom image for this playlist
     public var imageData: Data?
+    public var hexColor: HexColor?
     public var elements: [PlaylistElement]
     public var selectedRowIndexes: [Int]?
     public var tableColumns: [String]?
@@ -29,6 +31,7 @@ public struct Playlist: Sendable, Hashable, Equatable {
         isEditable: Bool = true,
         collectionType: CollectionType,
         imageData: Data? = nil,
+        hexColor: HexColor? = nil,
         selectedRowIndexes: [Int]? = nil,
         elements: [PlaylistElement] = [],
         tableColumns: [String]? = nil,
@@ -39,6 +42,7 @@ public struct Playlist: Sendable, Hashable, Equatable {
         self.isEditable = isEditable
         self.collectionType = collectionType
         self.imageData = imageData
+        self.hexColor = hexColor
         self.selectedRowIndexes = selectedRowIndexes
         self.elements = elements
         self.tableColumns = tableColumns
@@ -56,6 +60,7 @@ extension Playlist: Codable, Serializable {
         case isEditable
         case collectionType
         case imageData
+        case hexColor
         case selectedRowIndexes
         case elements
         case tableColumns
@@ -73,6 +78,7 @@ extension Playlist: Codable, Serializable {
 
         // optionals
         imageData = try container.decodeIfPresent(Data.self, forKey: .imageData)
+        hexColor = try? container.decodeIfPresent(HexColor.self, forKey: .hexColor)
         selectedRowIndexes = try container.decodeIfPresent([Int].self, forKey: .selectedRowIndexes)
         tableColumns = try container.decodeIfPresent([String].self, forKey: .tableColumns)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
@@ -91,6 +97,7 @@ extension Playlist: Codable, Serializable {
 
         // optionals
         try container.encodeIfPresent(imageData, forKey: .imageData)
+        try container.encodeIfPresent(hexColor, forKey: .hexColor)
         try container.encodeIfPresent(selectedRowIndexes, forKey: .selectedRowIndexes)
         try container.encodeIfPresent(tableColumns, forKey: .tableColumns)
         try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
