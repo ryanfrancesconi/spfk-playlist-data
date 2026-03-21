@@ -24,8 +24,11 @@ extension PlaylistElement: Codable, Serializable {
         hexColor = try? container.decodeIfPresent(HexColor.self, forKey: .hexColor)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
 
-        if let flags = try container.decodeIfPresent(Set<MetadataDirtyFlag>.self, forKey: .dirtyFlags) {
-            dirtyFlags = flags
+        // Decode dirtyFlags from raw strings — SwiftData KVC materializes enum
+        // Set elements as dictionaries instead of using the enum's Codable, so we
+        // must encode/decode as [String] and reconstruct manually.
+        if let rawFlags = try? container.decodeIfPresent([String].self, forKey: .dirtyFlags) {
+            dirtyFlags = Set(rawFlags.compactMap { MetadataDirtyFlag(rawValue: $0) })
         }
 
         invalidateSearch()
@@ -43,7 +46,7 @@ extension PlaylistElement: Codable, Serializable {
         try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
 
         if !dirtyFlags.isEmpty {
-            try container.encode(dirtyFlags, forKey: .dirtyFlags)
+            try container.encode(dirtyFlags.map(\.rawValue), forKey: .dirtyFlags)
         }
     }
 }
