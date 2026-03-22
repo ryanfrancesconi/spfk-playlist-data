@@ -66,12 +66,11 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
 
     public init(
         mafDescription: MetaAudioFileDescription,
-        hexColor: HexColor? = nil,
         sortIndex: Int? = nil
     ) throws {
         self.mafDescription = mafDescription
-        self.hexColor = hexColor
         self.sortIndex = sortIndex
+        hexColor = mafDescription.urlProperties.finderTags.hexColorTag
 
         do {
             try updateBookmark()
