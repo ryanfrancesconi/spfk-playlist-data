@@ -99,6 +99,10 @@ extension PlaylistElement {
         out += mafDescription.tagProperties.customTags.values
         out += mafDescription.urlProperties.finderTags.labels()
 
+        if let hexColor {
+            out.append(hexColor.colorName.rawValue)
+        }
+
         if let bext = mafDescription.bextDescription {
             let values = bext.dictionary.values.compactMap(\.self?.trimmed)
             out += values
