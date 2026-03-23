@@ -64,6 +64,14 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
         hexColor?.cgColor
     }
 
+    /// The resolved display color using 3-tier precedence:
+    /// 1. Custom hexColor (explicit hex text tag or user-assigned)
+    /// 2. Finder label color (first by rawValue order)
+    /// 3. nil (caller falls back to default)
+    public var resolvedDisplayColor: HexColor? {
+        hexColor ?? mafDescription.urlProperties.finderTags.hexColorFromLabel
+    }
+
     public init(
         mafDescription: MetaAudioFileDescription,
         sortIndex: Int? = nil
