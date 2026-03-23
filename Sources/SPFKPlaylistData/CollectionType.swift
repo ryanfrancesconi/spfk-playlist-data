@@ -1,8 +1,6 @@
 import Foundation
-import RawCodable
 
-@RawCodable
-public enum CollectionType: String, Sendable, Hashable, Equatable {
+public enum CollectionType: String, Sendable, Hashable, Equatable, Codable {
     case system
     case user
 

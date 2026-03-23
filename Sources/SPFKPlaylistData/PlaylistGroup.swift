@@ -51,45 +51,7 @@ public struct PlaylistGroup: Sendable, Hashable, Equatable {
     }
 }
 
-extension PlaylistGroup: Codable {
-    enum CodingKeys: String, CodingKey {
-        case uuid
-        case title
-        case isEditable
-        case collectionType
-        case hexColor
-        case playlists
-        case sortIndex
-    }
-
-    public init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        uuid = try container.decode(UUID.self, forKey: .uuid)
-        playlists = try container.decode([Playlist].self, forKey: .playlists)
-        title = try container.decode(String.self, forKey: .title)
-        isEditable = try container.decode(Bool.self, forKey: .isEditable)
-        collectionType = try container.decode(CollectionType.self, forKey: .collectionType)
-
-        // optionals
-        hexColor = try? container.decodeIfPresent(HexColor.self, forKey: .hexColor)
-        sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
-    }
-
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-
-        try container.encode(uuid, forKey: .uuid)
-        try container.encode(playlists, forKey: .playlists)
-        try container.encode(title, forKey: .title)
-        try container.encode(isEditable, forKey: .isEditable)
-        try container.encode(collectionType, forKey: .collectionType)
-
-        // optionals
-        try container.encodeIfPresent(hexColor, forKey: .hexColor)
-        try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
-    }
-}
+extension PlaylistGroup: Codable {}
 
 extension PlaylistGroup {
     public static func createGroup(named title: String? = nil) -> PlaylistGroup {

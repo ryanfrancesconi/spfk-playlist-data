@@ -54,50 +54,35 @@ public struct Playlist: Sendable, Hashable, Equatable {
 
 extension Playlist: Codable, Serializable {
     enum CodingKeys: String, CodingKey {
-        case uuid
-        case version
-        case title
-        case isEditable
-        case collectionType
-        case imageData
-        case hexColor
-        case selectedRowIndexes
-        case elements
-        case tableColumns
-        case sortIndex
+        case uuid, title, isEditable, collectionType
+        case imageData, hexColor, elements
+        case selectedRowIndexes, tableColumns, sortIndex
     }
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-
         uuid = try container.decode(UUID.self, forKey: .uuid)
-        elements = try container.decode([PlaylistElement].self, forKey: .elements)
         title = try container.decode(String.self, forKey: .title)
         isEditable = try container.decode(Bool.self, forKey: .isEditable)
         collectionType = try container.decode(CollectionType.self, forKey: .collectionType)
-
-        // optionals
         imageData = try container.decodeIfPresent(Data.self, forKey: .imageData)
-        hexColor = try? container.decodeIfPresent(HexColor.self, forKey: .hexColor)
+        hexColor = try container.decodeIfPresent(HexColor.self, forKey: .hexColor)
+        elements = try container.decode([PlaylistElement].self, forKey: .elements)
         selectedRowIndexes = try container.decodeIfPresent([Int].self, forKey: .selectedRowIndexes)
         tableColumns = try container.decodeIfPresent([String].self, forKey: .tableColumns)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
-
         updateSortIndexes()
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-
         try container.encode(uuid, forKey: .uuid)
-        try container.encode(elements, forKey: .elements)
         try container.encode(title, forKey: .title)
         try container.encode(isEditable, forKey: .isEditable)
         try container.encode(collectionType, forKey: .collectionType)
-
-        // optionals
         try container.encodeIfPresent(imageData, forKey: .imageData)
         try container.encodeIfPresent(hexColor, forKey: .hexColor)
+        try container.encode(elements, forKey: .elements)
         try container.encodeIfPresent(selectedRowIndexes, forKey: .selectedRowIndexes)
         try container.encodeIfPresent(tableColumns, forKey: .tableColumns)
         try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
