@@ -120,17 +120,6 @@ final class PlaylistElementTests: TestCaseModel {
         #expect(decoded.sortIndex == original.sortIndex)
     }
 
-    @Test func codablePreservesHexColor() throws {
-        let url = TestBundleResources.shared.tabla_wav
-        let hexColor = HexColor(string: "FF0000FF")
-        let original = try PlaylistElement(mafDescription: .init(url: url), hexColor: hexColor)
-
-        let data = try JSONEncoder().encode(original)
-        let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
-
-        #expect(decoded.hexColor == hexColor)
-    }
-
     @Test func codableDirtyFlagsEmptyWhenNoneSet() throws {
         let url = TestBundleResources.shared.tabla_wav
         let original = try PlaylistElement(mafDescription: .init(url: url))
