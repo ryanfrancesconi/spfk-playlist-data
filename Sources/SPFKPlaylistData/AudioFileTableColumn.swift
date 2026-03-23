@@ -10,7 +10,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
     case fileSize = "Size"
     case creationDate = "Created"
     case modificationDate = "Modified"
-    case finderTags = "Finder Tags"
+    case colors = "Colors"
     case markers = "Markers"
 
     public var showImage: Bool { self == .file }
@@ -23,7 +23,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
         switch self {
         case .number: 40
         case .type, .fileSize: 60
-        case .finderTags: 80
+        case .colors: 80
         case .file: 200
         default: nil
         }
@@ -60,7 +60,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
             /// Row number cell — plain text, no element lookup needed.
             case number
             /// Finder tag dots cell — custom rendering.
-            case finderTags
+            case color
             /// Standard image+text cell.
             case standard
         }
@@ -82,8 +82,8 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
         switch self {
         case .number:
             CellStyle(kind: .number, showsImage: false, textColorRole: .secondary, isItalic: false)
-        case .finderTags:
-            CellStyle(kind: .finderTags, showsImage: false, textColorRole: .secondary, isItalic: false)
+        case .colors:
+            CellStyle(kind: .color, showsImage: false, textColorRole: .secondary, isItalic: false)
         case .file:
             CellStyle(kind: .standard, showsImage: true, textColorRole: .primary, isItalic: isDirty)
         default:

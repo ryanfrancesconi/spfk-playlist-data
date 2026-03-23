@@ -49,7 +49,7 @@ extension PlaylistElement {
 
             return value
 
-        case .finderTags:
+        case .colors:
             return mafDescription.urlProperties.finderTags.stringValue
 
         case .markers:

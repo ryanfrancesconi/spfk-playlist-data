@@ -1,7 +1,7 @@
 // Copyright Ryan Francesconi. All Rights Reserved. Revision History at https://github.com/ryanfrancesconi/spfk-data
 
 import Foundation
-import SPFKUtils
+import SPFKBase
 
 public struct PlaylistGroup: Sendable, Hashable, Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {

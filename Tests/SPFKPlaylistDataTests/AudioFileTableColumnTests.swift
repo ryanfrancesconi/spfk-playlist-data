@@ -53,7 +53,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
         #expect(AudioFileTableColumn.number.defaultWidth == 40)
         #expect(AudioFileTableColumn.type.defaultWidth == 60)
         #expect(AudioFileTableColumn.fileSize.defaultWidth == 60)
-        #expect(AudioFileTableColumn.finderTags.defaultWidth == 80)
+        #expect(AudioFileTableColumn.colors.defaultWidth == 80)
         #expect(AudioFileTableColumn.file.defaultWidth == 200)
 
         // These should be nil (use default)
@@ -127,8 +127,8 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func cellStyleFinderTagsColumn() {
-        let style = AudioFileTableColumn.finderTags.cellStyle()
-        #expect(style.kind == .finderTags)
+        let style = AudioFileTableColumn.colors.cellStyle()
+        #expect(style.kind == .color)
         #expect(style.showsImage == false)
         #expect(style.isItalic == false)
     }
@@ -172,7 +172,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func cellStyleFinderTagsIgnoresNeedsSave() {
-        let style = AudioFileTableColumn.finderTags.cellStyle(isDirty: true)
+        let style = AudioFileTableColumn.colors.cellStyle(isDirty: true)
         #expect(style.isItalic == false)
     }
 
