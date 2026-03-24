@@ -61,11 +61,12 @@ public struct TagQuery: Sendable {
             let parts = token.split(separator: ":", maxSplits: 1)
             guard parts.count == 2 else { continue }
 
-            let keyStr = String(parts[0]).lowercased()
+            let keyStr = String(parts[0])
             let valueStr = String(parts[1])
+
             guard valueStr.isNotEmpty else { continue }
 
-            if let key = TagKey(rawValue: keyStr) ?? Self.aliases[keyStr] {
+            if let key = TagKey(string: keyStr) ?? Self.aliases[keyStr.lowercased()] {
                 clauses.append((key, valueStr))
                 consumed.insert(i)
             }
@@ -80,13 +81,12 @@ public struct TagQuery: Sendable {
             guard let key = Self.numericUnitKeys[token.lowercased()] else { continue }
 
             // Prefer the left-neighbor ("120 bpm"); fall back to right-neighbor ("bpm 120").
-            let adjacentIndex: Int?
-            if i > 0, !consumed.contains(i - 1), Double(tokens[i - 1]) != nil {
-                adjacentIndex = i - 1
+            let adjacentIndex: Int? = if i > 0, !consumed.contains(i - 1), Double(tokens[i - 1]) != nil {
+                i - 1
             } else if i + 1 < tokens.count, !consumed.contains(i + 1), Double(tokens[i + 1]) != nil {
-                adjacentIndex = i + 1
+                i + 1
             } else {
-                adjacentIndex = nil
+                nil
             }
 
             if let vi = adjacentIndex {
