@@ -127,6 +127,36 @@ final class TagQueryTests: TestCaseModel {
         #expect(q.tagClauses[0].value == "128")
     }
 
+    // MARK: - Colon syntax case-insensitivity
+
+    @Test func colonSyntaxUppercaseKey() {
+        let q = TagQuery(string: "BPM:120")
+        #expect(q.tagClauses.count == 1)
+        #expect(q.tagClauses[0].key == .bpm)
+        #expect(q.tagClauses[0].value == "120")
+    }
+
+    @Test func colonSyntaxMixedCaseKey() {
+        let q = TagQuery(string: "Artist:arca")
+        #expect(q.tagClauses.count == 1)
+        #expect(q.tagClauses[0].key == .artist)
+        #expect(q.tagClauses[0].value == "arca")
+    }
+
+    @Test func colonSyntaxID3FrameKey() {
+        // TBPM is the ID3 frame identifier for .bpm
+        let q = TagQuery(string: "TBPM:120")
+        #expect(q.tagClauses.count == 1)
+        #expect(q.tagClauses[0].key == .bpm)
+        #expect(q.tagClauses[0].value == "120")
+    }
+
+    @Test func colonSyntaxID3FrameKeyLowercase() {
+        let q = TagQuery(string: "tbpm:120")
+        #expect(q.tagClauses.count == 1)
+        #expect(q.tagClauses[0].key == .bpm)
+    }
+
     // MARK: - PlaylistElement.similarity(to: TagQuery)
 
     @Test func elementMatchesTagClause() throws {
@@ -181,6 +211,31 @@ final class TagQueryTests: TestCaseModel {
 
         // "tabla" should match the filename via fuzzy
         let q = TagQuery(string: "tabla")
+        #expect(element.similarity(to: q) != nil)
+    }
+
+    @Test func elementStructuredMatchesFuzzyNoMatchReturnsZeroScore() throws {
+        // Structured clause matches (bpm:120) but fuzzy term has no match ("zzznomatch").
+        // Fuzzy similarity returns 0.0 rather than nil for misses; callers filter with score > 0.
+        let url = TestBundleResources.shared.tabla_wav
+        var desc = MetaAudioFileDescription(url: url)
+        desc.tagProperties.set(tag: .bpm, value: "120")
+        let element = try PlaylistElement(mafDescription: desc)
+
+        let q = TagQuery(string: "bpm:120 zzznomatch")
+        let score = element.similarity(to: q)
+        #expect(score != nil)
+        #expect(score == 0.0)
+    }
+
+    @Test func elementBothStructuredAndFuzzyMatch() throws {
+        // Structured clause matches and fuzzy term also matches filename
+        let url = TestBundleResources.shared.tabla_wav
+        var desc = MetaAudioFileDescription(url: url)
+        desc.tagProperties.set(tag: .bpm, value: "120")
+        let element = try PlaylistElement(mafDescription: desc)
+
+        let q = TagQuery(string: "bpm:120 tabla")
         #expect(element.similarity(to: q) != nil)
     }
 }

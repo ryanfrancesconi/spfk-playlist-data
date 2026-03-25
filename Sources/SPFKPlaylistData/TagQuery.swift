@@ -1,5 +1,4 @@
 // Copyright Ryan Francesconi. All Rights Reserved. Revision History at https://github.com/ryanfrancesconi
-// swiftformat:disable consecutiveSpaces
 
 import Foundation
 import SPFKMetadataBase
@@ -108,6 +107,8 @@ public struct TagQuery: Sendable {
 
 // MARK: - Key resolution
 
+// swiftformat:disable consecutiveSpaces
+
 extension TagQuery {
     /// Aliases mapping common abbreviations and display-name fragments to ``TagKey`` cases.
     /// Used for colon-syntax resolution only; does not affect unit inference.
@@ -132,3 +133,5 @@ extension TagQuery {
         "dbtp":  .loudnessTruePeak,
     ]
 }
+
+// swiftformat:enable consecutiveSpaces
