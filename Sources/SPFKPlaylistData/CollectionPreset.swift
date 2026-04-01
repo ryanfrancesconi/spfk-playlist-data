@@ -4,7 +4,6 @@ import SPFKUtils
 public enum CollectionPreset: UInt8 {
     // system playists groups
     case systemGroup = 0
-
     case searchResults
     case favorites
 
@@ -55,6 +54,11 @@ public enum CollectionPreset: UInt8 {
     public static let searchResultsIdentifier: NodeIdentifier = .init(
         parentId: CollectionPreset.systemGroup.uuid,
         id: CollectionPreset.searchResults.uuid
+    )
+
+    public static let favoritesIdentifier: NodeIdentifier = .init(
+        parentId: CollectionPreset.systemGroup.uuid,
+        id: CollectionPreset.favorites.uuid
     )
 
     public static func playlist(
