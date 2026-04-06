@@ -214,7 +214,7 @@ final class TagQueryTests: TestCaseModel {
         #expect(element.similarity(to: q) != nil)
     }
 
-    @Test func elementStructuredMatchesFuzzyNoMatchReturnsZeroScore() throws {
+    @Test func elementStructuredMatchesFuzzyNoMatchReturnsNil() throws {
         // Structured clause matches (bpm:120) but fuzzy term has no match ("zzznomatch").
         // Fuzzy similarity returns 0.0 rather than nil for misses; callers filter with score > 0.
         let url = TestBundleResources.shared.tabla_wav
@@ -224,8 +224,7 @@ final class TagQueryTests: TestCaseModel {
 
         let q = TagQuery(string: "bpm:120 zzznomatch")
         let score = element.similarity(to: q)
-        #expect(score != nil)
-        #expect(score == 0.0)
+        #expect(score == nil)
     }
 
     @Test func elementBothStructuredAndFuzzyMatch() throws {
