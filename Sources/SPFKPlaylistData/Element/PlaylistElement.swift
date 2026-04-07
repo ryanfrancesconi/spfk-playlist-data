@@ -43,6 +43,12 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
     // Searchable
     public private(set) var searchableValue: SearchableValue = []
 
+    /// Whether the file was externally modified while this element has unsaved changes.
+    /// This is a transient flag — not persisted, defaults to `false`.
+    /// Set by `FileModificationObserver` when a disk change is detected on a dirty element.
+    /// Cleared when the element is saved or reparsed from disk.
+    public var isExternallyModified: Bool = false
+
     public var isModified: Bool {
         mafDescription.urlProperties.isModified
     }
