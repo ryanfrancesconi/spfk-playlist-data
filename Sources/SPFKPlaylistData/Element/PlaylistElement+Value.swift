@@ -20,6 +20,9 @@ extension PlaylistElement {
         case .number:
             return nil
 
+        case .dirty:
+            return isDirty ? "Needs Save" : ""
+
         case .file:
             return filename
 
@@ -85,6 +88,9 @@ extension PlaylistElement {
 
         case .markers:
             return mafDescription.markerCollection.markerDescriptions.count.string
+
+        case .dirty:
+            return isDirty ? "0" : "1"
 
         default:
             return stringValue(column: column)

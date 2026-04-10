@@ -3,6 +3,7 @@ import Foundation
 
 public enum AudioFileTableColumn: String, CaseIterable, Sendable {
     case number = "#"
+    case dirty = "●"
     case file = "File"
     case type = "Type"
     case format = "Format"
@@ -22,6 +23,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
     public var defaultWidth: CGFloat? {
         switch self {
         case .number: 40
+        case .dirty: 40
         case .type, .fileSize: 60
         case .colors: 80
         case .file: 200
@@ -29,11 +31,18 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
         }
     }
 
-    public var minWidth: CGFloat { 50 }
+    public var minWidth: CGFloat {
+        switch self {
+        case .number: 30
+        case .dirty: 40
+        default: 50
+        }
+    }
 
     public var maxWidth: CGFloat? {
         switch self {
         case .number: 60
+        case .dirty: 40
         case .type: 60
         default: nil
         }
@@ -59,6 +68,9 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
         public enum Kind: Sendable, Equatable {
             /// Row number cell — plain text, no element lookup needed.
             case number
+
+            case dirty
+
             /// Finder tag dots cell — custom rendering.
             case color
             /// Standard image+text cell.
@@ -82,10 +94,16 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
         switch self {
         case .number:
             CellStyle(kind: .number, showsImage: false, textColorRole: .secondary, isItalic: false)
+
+        case .dirty:
+            CellStyle(kind: .dirty, showsImage: false, textColorRole: .secondary, isItalic: false)
+
         case .colors:
             CellStyle(kind: .color, showsImage: false, textColorRole: .secondary, isItalic: false)
+
         case .file:
             CellStyle(kind: .standard, showsImage: true, textColorRole: .primary, isItalic: isDirty)
+
         default:
             CellStyle(kind: .standard, showsImage: false, textColorRole: .secondary, isItalic: isDirty)
         }
