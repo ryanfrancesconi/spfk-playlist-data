@@ -136,4 +136,30 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
 
         return columnTitles.count
     }
+
+    /// Returns a new column list reordered to match `savedOrder`.
+    ///
+    /// Applies the same move operations used by `applyColumnLayout` (remove-then-insert),
+    /// allowing the algorithm to be tested without AppKit. Columns absent from `savedOrder`
+    /// are left at the end in their original relative positions.
+    ///
+    /// - Parameters:
+    ///   - current: the live column titles as they appear left-to-right in the table.
+    ///   - savedOrder: the previously saved column titles in their desired order.
+    /// - Returns: the column list after reordering has been applied.
+    public static func reorderStandardColumns(current: [String], toMatch savedOrder: [String]) -> [String] {
+        var columns = current
+        var writeIndex = 0
+
+        for title in savedOrder {
+            guard let currentIndex = columns.firstIndex(of: title) else { continue }
+            if currentIndex != writeIndex {
+                let col = columns.remove(at: currentIndex)
+                columns.insert(col, at: writeIndex)
+            }
+            writeIndex += 1
+        }
+
+        return columns
+    }
 }

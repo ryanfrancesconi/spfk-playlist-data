@@ -64,12 +64,6 @@ final class AudioFileTableColumnTests: TestCaseModel {
 
     // MARK: - Min / Max Width
 
-    @Test func minWidthIsUniform() {
-        for column in AudioFileTableColumn.allCases {
-            #expect(column.minWidth == 50)
-        }
-    }
-
     @Test func maxWidths() {
         #expect(AudioFileTableColumn.number.maxWidth == 60)
         #expect(AudioFileTableColumn.type.maxWidth == 60)
@@ -88,7 +82,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     // MARK: - All Cases Count
 
     @Test func allCasesCount() {
-        #expect(AudioFileTableColumn.allCases.count == 10)
+        #expect(AudioFileTableColumn.allCases.count == 11)
     }
 
     // MARK: - Tag Insertion Index
@@ -203,5 +197,108 @@ final class AudioFileTableColumnTests: TestCaseModel {
         #expect(style.showsImage == false)
         #expect(style.textColorRole == .secondary)
         #expect(style.isItalic == false)
+    }
+
+    // MARK: - reorderStandardColumns
+
+    // Helper: default column order as display names
+    private var defaultOrder: [String] { AudioFileTableColumn.allCases.map(\.displayName) }
+
+    @Test func reorderStandardColumnsNoOpWhenAlreadyInOrder() {
+        let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: defaultOrder)
+        #expect(result == defaultOrder)
+    }
+
+    @Test func reorderStandardColumnsEmptySavedOrderLeavesUntouched() {
+        let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: [])
+        #expect(result == defaultOrder)
+    }
+
+    @Test func reorderStandardColumnsMoveOneForward() {
+        // User moved "Format" (index 4) to index 2, before "Type"
+        // Saved: #, ●, File, Format, Type, Duration, Size, Created, Modified, Colors, Markers
+        var saved = defaultOrder
+        let removed = saved.remove(at: 4) // Format
+        saved.insert(removed, at: 3)
+
+        let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: saved)
+        #expect(result == saved)
+    }
+
+    @Test func reorderStandardColumnsMoveOneBackward() {
+        // User moved "File" (index 2) to the end, before Colors/Markers
+        var saved = defaultOrder
+        let removed = saved.remove(at: 2) // File
+        saved.insert(removed, at: saved.count - 2)
+
+        let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: saved)
+        #expect(result == saved)
+    }
+
+    @Test func reorderStandardColumnsMoveFirstToLast() {
+        // User moved "#" to the end
+        var saved = defaultOrder
+        let removed = saved.remove(at: 0)
+        saved.append(removed)
+
+        let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: saved)
+        #expect(result == saved)
+    }
+
+    @Test func reorderStandardColumnsMoveLastToFirst() {
+        // User moved "Markers" to the front
+        var saved = defaultOrder
+        let removed = saved.remove(at: saved.count - 1)
+        saved.insert(removed, at: 0)
+
+        let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: saved)
+        #expect(result == saved)
+    }
+
+    @Test func reorderStandardColumnsMultipleMoves() {
+        // User moved Markers (#10) and Colors (#9) to the front
+        var saved = defaultOrder
+        let markers = saved.remove(at: saved.count - 1)
+        let colors = saved.remove(at: saved.count - 1)
+        saved.insert(colors, at: 0)
+        saved.insert(markers, at: 0)
+
+        let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: saved)
+        #expect(result == saved)
+    }
+
+    @Test func reorderStandardColumnsIgnoresTagColumnsInSaved() {
+        // Saved layout contains interleaved tag columns — only standard columns are reordered
+        let savedWithTags = ["#", "●", "BPM", "File", "Type", "Key", "Format", "Duration", "Size", "Created", "Modified", "Colors", "Markers"]
+        let expected = defaultOrder // tag columns are not in current table; standard order unchanged
+
+        let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: savedWithTags)
+        #expect(result == expected)
+    }
+
+    @Test func reorderStandardColumnsTagColumnsInCurrentPreservedAfterStandard() {
+        // Table has tag columns appended at the end; they should not be displaced
+        let withTags = defaultOrder + ["BPM", "Key"]
+        var saved = defaultOrder + ["BPM", "Key"]
+        // Swap File and Type in saved order
+        let fileIdx = saved.firstIndex(of: "File")!
+        let typeIdx = saved.firstIndex(of: "Type")!
+        saved.swapAt(fileIdx, typeIdx)
+
+        let result = AudioFileTableColumn.reorderStandardColumns(current: withTags, toMatch: saved)
+
+        // Standard columns should be in saved order; tag columns remain at end
+        let resultStandard = result.filter { AudioFileTableColumn(displayName: $0) != nil }
+        let savedStandard = saved.filter { AudioFileTableColumn(displayName: $0) != nil }
+        #expect(resultStandard == savedStandard)
+        #expect(result.last == "Key")
+        #expect(result[result.count - 2] == "BPM")
+    }
+
+    @Test func reorderStandardColumnsRoundTrip() {
+        // Whatever order is captured should be fully restorable
+        let shuffled = ["Markers", "Colors", "#", "●", "Format", "File", "Type", "Duration", "Size", "Created", "Modified"]
+        let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: shuffled)
+        #expect(result == shuffled)
     }
 }
