@@ -98,7 +98,7 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
     }
 
     public mutating func updateBookmark() throws {
-        bookmarkData = try url.bookmarkData(options: [.withSecurityScope])
+        bookmarkData = try url.bookmarkData(options: [])
     }
 }
 
