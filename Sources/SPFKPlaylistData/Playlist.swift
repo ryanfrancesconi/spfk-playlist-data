@@ -9,7 +9,8 @@ public struct Playlist: Sendable, Hashable, Equatable {
         lhs.uuid == rhs.uuid &&
             lhs.elements == rhs.elements &&
             lhs.selectedRowIndexes == rhs.selectedRowIndexes &&
-            lhs.tableColumns == rhs.tableColumns
+            lhs.tableColumns == rhs.tableColumns &&
+            lhs.columnLayout == rhs.columnLayout
     }
 
     public var uuid: UUID
@@ -25,6 +26,10 @@ public struct Playlist: Sendable, Hashable, Equatable {
     public var tableColumns: [String]?
     public var sortIndex: Int?
 
+    /// Full column layout (order, width, visibility) for this playlist's table view.
+    /// Nil means no layout has been saved yet; fall back to the workspace-level layout.
+    public var columnLayout: [TableColumnState]?
+
     public init(
         uuid: UUID,
         title: String,
@@ -36,6 +41,7 @@ public struct Playlist: Sendable, Hashable, Equatable {
         elements: [PlaylistElement] = [],
         tableColumns: [String]? = nil,
         sortIndex: Int? = nil,
+        columnLayout: [TableColumnState]? = nil
     ) {
         self.uuid = uuid
         self.title = title
@@ -47,6 +53,7 @@ public struct Playlist: Sendable, Hashable, Equatable {
         self.elements = elements
         self.tableColumns = tableColumns
         self.sortIndex = sortIndex
+        self.columnLayout = columnLayout
 
         updateSortIndexes()
     }
@@ -57,6 +64,7 @@ extension Playlist: Codable, Serializable {
         case uuid, title, isEditable, collectionType
         case imageData, hexColor, elements
         case selectedRowIndexes, tableColumns, sortIndex
+        case columnLayout
     }
 
     public init(from decoder: any Decoder) throws {
@@ -71,6 +79,7 @@ extension Playlist: Codable, Serializable {
         selectedRowIndexes = try container.decodeIfPresent([Int].self, forKey: .selectedRowIndexes)
         tableColumns = try container.decodeIfPresent([String].self, forKey: .tableColumns)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
+        columnLayout = try container.decodeIfPresent([TableColumnState].self, forKey: .columnLayout)
         updateSortIndexes()
     }
 
@@ -86,5 +95,6 @@ extension Playlist: Codable, Serializable {
         try container.encodeIfPresent(selectedRowIndexes, forKey: .selectedRowIndexes)
         try container.encodeIfPresent(tableColumns, forKey: .tableColumns)
         try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
+        try container.encodeIfPresent(columnLayout, forKey: .columnLayout)
     }
 }
