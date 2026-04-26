@@ -20,10 +20,24 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
         rawValue
     }
 
+    public var isMovable: Bool {
+        switch self {
+        case .number, .dirty: false
+        default: true
+        }
+    }
+
+    public var headerAlignment: NSTextAlignment {
+        switch self {
+        case .dirty, .number: .center
+        default: .left
+        }
+    }
+
     public var defaultWidth: CGFloat? {
         switch self {
         case .number: 40
-        case .dirty: 40
+        case .dirty: 30
         case .type, .fileSize: 60
         case .colors: 80
         case .file: 200
@@ -34,7 +48,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
     public var minWidth: CGFloat {
         switch self {
         case .number: 30
-        case .dirty: 40
+        case .dirty: 30
         default: 50
         }
     }
@@ -42,7 +56,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
     public var maxWidth: CGFloat? {
         switch self {
         case .number: 60
-        case .dirty: 40
+        case .dirty: 30
         case .type: 60
         default: nil
         }
