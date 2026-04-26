@@ -52,6 +52,15 @@ extension PlaylistElement {
 
             return value
 
+        case .channels:
+            return mafDescription.audioFormat?.channelCount.string
+
+        case .sampleRate:
+            return mafDescription.audioFormat?.sampleRateDescription
+
+        case .bitDepth:
+            return mafDescription.audioFormat?.bitsPerChannel?.string
+
         case .colors:
             return mafDescription.urlProperties.finderTags.stringValue
 

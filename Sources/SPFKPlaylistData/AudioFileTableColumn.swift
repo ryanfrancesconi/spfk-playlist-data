@@ -7,6 +7,9 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
     case file = "File"
     case type = "Type"
     case format = "Format"
+    case channels = "Channels"
+    case sampleRate = "Sample Rate"
+    case bitDepth = "Bit Depth"
     case duration = "Duration"
     case fileSize = "Size"
     case creationDate = "Created"
@@ -36,7 +39,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
 
     public var defaultWidth: CGFloat? {
         switch self {
-        case .number: 40
+        case .number, .channels: 40
         case .dirty: 30
         case .type, .fileSize: 60
         case .colors: 80
@@ -47,7 +50,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
 
     public var minWidth: CGFloat {
         switch self {
-        case .number: 30
+        case .number, .channels: 30
         case .dirty: 30
         default: 50
         }
@@ -55,7 +58,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
 
     public var maxWidth: CGFloat? {
         switch self {
-        case .number: 60
+        case .number, .channels: 60
         case .dirty: 30
         case .type: 60
         default: nil
