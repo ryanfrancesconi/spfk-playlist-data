@@ -35,7 +35,7 @@ extension PlaylistElement {
         case .fileSize:
             return mafDescription.urlProperties.fileSizeString
 
-        case .type:
+        case .fileType:
             return mafDescription.fileType?.pathExtension
 
         case .duration:

@@ -1,11 +1,18 @@
 import AppKit
 import Foundation
 
-public enum AudioFileTableColumn: String, CaseIterable, Sendable {
+public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
+    public static func < (lhs: AudioFileTableColumn, rhs: AudioFileTableColumn) -> Bool {
+        lhs.rawValue.standardCompare(with: rhs.rawValue)
+    }
+    
+    // required
     case number = "#"
     case dirty = "●"
     case file = "File"
-    case type = "Type"
+
+    // optional
+    case fileType = "Type"
     case format = "Format"
     case channels = "Channels"
     case sampleRate = "Sample Rate"
@@ -30,6 +37,13 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
         }
     }
 
+    public var isRequired: Bool {
+        switch self {
+        case .number, .dirty, .file: true
+        default: false
+        }
+    }
+
     public var headerAlignment: NSTextAlignment {
         switch self {
         case .dirty, .number: .center
@@ -41,7 +55,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
         switch self {
         case .number, .channels: 40
         case .dirty: 30
-        case .type, .fileSize: 60
+        case .fileType, .fileSize: 60
         case .colors: 80
         case .file: 200
         default: nil
@@ -60,7 +74,7 @@ public enum AudioFileTableColumn: String, CaseIterable, Sendable {
         switch self {
         case .number, .channels: 60
         case .dirty: 30
-        case .type: 60
+        case .fileType: 60
         default: nil
         }
     }

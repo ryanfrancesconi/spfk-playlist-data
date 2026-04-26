@@ -51,7 +51,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
 
     @Test func defaultWidths() {
         #expect(AudioFileTableColumn.number.defaultWidth == 40)
-        #expect(AudioFileTableColumn.type.defaultWidth == 60)
+        #expect(AudioFileTableColumn.fileType.defaultWidth == 60)
         #expect(AudioFileTableColumn.fileSize.defaultWidth == 60)
         #expect(AudioFileTableColumn.colors.defaultWidth == 80)
         #expect(AudioFileTableColumn.file.defaultWidth == 200)
@@ -66,7 +66,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
 
     @Test func maxWidths() {
         #expect(AudioFileTableColumn.number.maxWidth == 60)
-        #expect(AudioFileTableColumn.type.maxWidth == 60)
+        #expect(AudioFileTableColumn.fileType.maxWidth == 60)
         #expect(AudioFileTableColumn.file.maxWidth == nil)
         #expect(AudioFileTableColumn.duration.maxWidth == nil)
     }
@@ -143,7 +143,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func cellStyleStandardColumns() {
-        let standardColumns: [AudioFileTableColumn] = [.type, .format, .duration, .fileSize, .creationDate, .modificationDate, .markers]
+        let standardColumns: [AudioFileTableColumn] = [.fileType, .format, .duration, .fileSize, .creationDate, .modificationDate, .markers]
 
         for column in standardColumns {
             let style = column.cellStyle()
@@ -155,7 +155,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func cellStyleStandardColumnsDirty() {
-        let style = AudioFileTableColumn.type.cellStyle(isDirty: true)
+        let style = AudioFileTableColumn.fileType.cellStyle(isDirty: true)
         #expect(style.isItalic == true)
         #expect(style.textColorRole == .secondary)
     }

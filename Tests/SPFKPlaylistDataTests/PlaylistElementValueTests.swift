@@ -35,7 +35,7 @@ final class PlaylistElementValueTests: TestCaseModel {
         desc.fileType = .wav
         let element = try PlaylistElement(mafDescription: desc)
 
-        #expect(element.stringValue(column: .type) == "wav")
+        #expect(element.stringValue(column: .fileType) == "wav")
     }
 
     @Test func markersWithNoMarkers() throws {
