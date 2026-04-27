@@ -82,7 +82,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     // MARK: - All Cases Count
 
     @Test func allCasesCount() {
-        #expect(AudioFileTableColumn.allCases.count == 11)
+        #expect(AudioFileTableColumn.allCases.count == 14)
     }
 
     // MARK: - Tag Insertion Index
@@ -215,8 +215,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func reorderStandardColumnsMoveOneForward() {
-        // User moved "Format" (index 4) to index 2, before "Type"
-        // Saved: #, ●, File, Format, Type, Duration, Size, Created, Modified, Colors, Markers
+        // User moved "Format" (index 4) to before "Type" (index 3)
         var saved = defaultOrder
         let removed = saved.remove(at: 4) // Format
         saved.insert(removed, at: 3)
@@ -268,9 +267,10 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func reorderStandardColumnsIgnoresTagColumnsInSaved() {
-        // Saved layout contains interleaved tag columns — only standard columns are reordered
-        let savedWithTags = ["#", "●", "BPM", "File", "Type", "Key", "Format", "Duration", "Size", "Created", "Modified", "Colors", "Markers"]
-        let expected = defaultOrder // tag columns are not in current table; standard order unchanged
+        // Saved layout contains interleaved tag columns — only standard columns are reordered.
+        // All 14 standard columns are present in their original relative order; tag columns are skipped.
+        let savedWithTags = ["#", "●", "BPM", "File", "Type", "Key", "Format", "Channels", "Sample Rate", "Bit Depth", "Duration", "Size", "Created", "Modified", "Colors", "Markers"]
+        let expected = defaultOrder // standard order is unchanged; tag columns are not in current table
 
         let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: savedWithTags)
         #expect(result == expected)
@@ -296,8 +296,8 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func reorderStandardColumnsRoundTrip() {
-        // Whatever order is captured should be fully restorable
-        let shuffled = ["Markers", "Colors", "#", "●", "Format", "File", "Type", "Duration", "Size", "Created", "Modified"]
+        // Whatever order is captured should be fully restorable (all 14 columns present)
+        let shuffled = ["Markers", "Colors", "#", "●", "Format", "File", "Channels", "Type", "Duration", "Sample Rate", "Size", "Created", "Bit Depth", "Modified"]
         let result = AudioFileTableColumn.reorderStandardColumns(current: defaultOrder, toMatch: shuffled)
         #expect(result == shuffled)
     }
