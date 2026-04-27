@@ -5,7 +5,7 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
     public static func < (lhs: AudioFileTableColumn, rhs: AudioFileTableColumn) -> Bool {
         lhs.rawValue.standardCompare(with: rhs.rawValue)
     }
-    
+
     // required
     case number = "#"
     case dirty = "●"
@@ -160,7 +160,9 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
         guard !columnTitles.isEmpty else { return nil }
 
         for i in 0 ..< columnTitles.count {
-            if AudioFileTableColumn(displayName: columnTitles[i]) == nil {
+            let column = AudioFileTableColumn(displayName: columnTitles[i])
+
+            if column == nil || column?.isRequired == false {
                 return i
             }
         }
