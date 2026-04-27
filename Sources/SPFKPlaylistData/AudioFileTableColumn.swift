@@ -32,7 +32,7 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
 
     public var isMovable: Bool {
         switch self {
-        case .number, .dirty: false
+        case .number, .dirty, .file: false
         default: true
         }
     }
