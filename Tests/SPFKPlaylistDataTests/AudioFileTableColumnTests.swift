@@ -15,7 +15,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     // MARK: - Init
 
     @Test func initFromValidDisplayName() {
-        #expect(AudioFileTableColumn(displayName: "File") == .file)
+        #expect(AudioFileTableColumn(displayName: AudioFileTableColumn.file.rawValue) == .file)
     }
 
     @Test func initFromInvalidDisplayName() {
@@ -34,13 +34,13 @@ final class AudioFileTableColumnTests: TestCaseModel {
         #expect(AudioFileTableColumn.tagInsertionIndex(in: []) == nil)
     }
 
-    @Test func tagInsertionIndexAllStandardReturnsCount() {
+    @Test func tagInsertionAfterRequiredCount() {
         let titles = AudioFileTableColumn.allCases.map(\.displayName)
-        #expect(AudioFileTableColumn.tagInsertionIndex(in: titles) == titles.count)
+        #expect(AudioFileTableColumn.tagInsertionIndex(in: titles) == AudioFileTableColumn.allCases.filter(\.isRequired).count)
     }
 
     @Test func tagInsertionIndexFindsFirstNonStandard() {
-        let titles = ["#", "File", "Title", "Artist"]
+        let titles = [AudioFileTableColumn.number.rawValue, AudioFileTableColumn.file.rawValue, "Title", "Artist"]
         #expect(AudioFileTableColumn.tagInsertionIndex(in: titles) == 2)
     }
 
@@ -50,8 +50,11 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func tagInsertionIndexMixedOrder() {
-        let titles = ["#", "File", "Type", "Format", "Duration", "Title", "Size"]
-        #expect(AudioFileTableColumn.tagInsertionIndex(in: titles) == 5)
+        let titles = [
+            AudioFileTableColumn.number.rawValue, AudioFileTableColumn.file.rawValue, // after File
+            AudioFileTableColumn.fileType.rawValue, AudioFileTableColumn.format.rawValue, AudioFileTableColumn.duration.rawValue, "Title", AudioFileTableColumn.fileSize.rawValue
+        ]
+        #expect(AudioFileTableColumn.tagInsertionIndex(in: titles) == 2)
     }
 
     // MARK: - Cell Style
@@ -94,7 +97,7 @@ final class AudioFileTableColumnTests: TestCaseModel {
     }
 
     @Test func cellStyleForKnownColumnTitle() {
-        let style = AudioFileTableColumn.cellStyle(forColumnTitled: "File")
+        let style = AudioFileTableColumn.cellStyle(forColumnTitled: AudioFileTableColumn.file.rawValue)
         #expect(style.kind == .standard)
         #expect(style.showsImage == true)
         #expect(style.textColorRole == .primary)
