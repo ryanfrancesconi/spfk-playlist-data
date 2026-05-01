@@ -7,6 +7,15 @@ extension Playlist {
         update(all: sortedData)
     }
 
+    public mutating func sort(valueProvider: (PlaylistElement) -> String?, direction: Bool) {
+        let sorted = elements.sorted {
+            let f1 = valueProvider($0) ?? ""
+            let f2 = valueProvider($1) ?? ""
+            return f1.standardCompare(with: f2, ascending: direction)
+        }
+        update(all: sorted)
+    }
+
     private func sort(_ data: [PlaylistElement], by field: String, direction: Bool) -> [PlaylistElement] {
         data.sorted {
             let f1 = $0.sortValue(columnTitled: field) ?? ""
