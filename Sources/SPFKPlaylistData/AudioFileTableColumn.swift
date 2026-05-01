@@ -12,6 +12,7 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
     case file = "File"
 
     // optional
+    case path = "Path"
     case fileType = "Type"
     case format = "Format"
     case channels = "Channels"
@@ -57,7 +58,7 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
         case .dirty: 30
         case .fileType, .fileSize: 60
         case .colors: 80
-        case .file: 200
+        case .file, .path: 200
         default: nil
         }
     }

@@ -26,6 +26,9 @@ extension PlaylistElement {
         case .file:
             return filename
 
+        case .path:
+            return url.path
+
         case .creationDate:
             return mafDescription.urlProperties.creationDate?.mediumString
 
