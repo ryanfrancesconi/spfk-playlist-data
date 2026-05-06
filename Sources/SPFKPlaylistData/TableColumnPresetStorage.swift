@@ -1,6 +1,7 @@
 // Copyright Ryan Francesconi. All Rights Reserved. Revision History at https://github.com/ryanfrancesconi/spfk-playlist-data
 
 import Foundation
+import SPFKBase
 
 /// File-based storage for `TableColumnPreset` values.
 ///
@@ -31,6 +32,9 @@ public enum TableColumnPresetStorage {
         let fileURL = baseDirectory
             .appendingPathComponent(Self.directoryName)
             .appendingPathComponent(sanatize(filename: name))
+
+        Log.debug(fileURL.path)
+
         try FileManager.default.removeItem(at: fileURL)
     }
 
