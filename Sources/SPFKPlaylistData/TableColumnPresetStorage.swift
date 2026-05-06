@@ -33,8 +33,6 @@ public enum TableColumnPresetStorage {
             .appendingPathComponent(Self.directoryName)
             .appendingPathComponent(sanatize(filename: name))
 
-        Log.debug(fileURL.path)
-
         try FileManager.default.removeItem(at: fileURL)
     }
 
