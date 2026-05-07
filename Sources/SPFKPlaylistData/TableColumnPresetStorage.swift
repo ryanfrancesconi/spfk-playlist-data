@@ -52,7 +52,7 @@ public enum TableColumnPresetStorage {
 
     /// Returns the presets directory, creating it if necessary.
     public static func presetsDirectory(baseDirectory: URL) throws -> URL {
-        let directory = baseDirectory.appendingPathComponent(Self.directoryName)
+        let directory = baseDirectory.appendingPathComponent(Self.directoryName, isDirectory: true)
 
         if !FileManager.default.fileExists(atPath: directory.path) {
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
