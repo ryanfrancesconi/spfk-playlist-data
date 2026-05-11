@@ -1,6 +1,7 @@
 // Copyright Ryan Francesconi. All Rights Reserved. Revision History at https://github.com/ryanfrancesconi/spfk-data
 
 import Foundation
+import SPFKAudioBase
 import SPFKBase
 import SPFKMetadataBase
 import SPFKUtils
@@ -12,6 +13,7 @@ extension PlaylistElement: Codable, Serializable {
         case hexColor
         case sortIndex
         case dirtyFlags
+        case audioEditDescription
     }
 
     public init(from decoder: any Decoder) throws {
@@ -21,6 +23,7 @@ extension PlaylistElement: Codable, Serializable {
         hexColor = try container.decodeIfPresent(HexColor.self, forKey: .hexColor)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
         dirtyFlags = try container.decodeIfPresent(Set<MetadataDirtyFlag>.self, forKey: .dirtyFlags) ?? []
+        audioEditDescription = try container.decodeIfPresent(AudioEditDescription.self, forKey: .audioEditDescription)
         invalidateSearch()
     }
 
@@ -33,5 +36,6 @@ extension PlaylistElement: Codable, Serializable {
         if !dirtyFlags.isEmpty {
             try container.encode(dirtyFlags, forKey: .dirtyFlags)
         }
+        try container.encodeIfPresent(audioEditDescription, forKey: .audioEditDescription)
     }
 }

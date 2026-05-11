@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import SPFKAudioBase
 import SPFKBase
 import SPFKMetadataBase
 import SPFKSearch
@@ -35,8 +36,15 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
 
     public var dirtyFlags: Set<MetadataDirtyFlag> = []
 
-    /// Whether any unsaved changes exist.
-    public var isDirty: Bool { !dirtyFlags.isEmpty }
+    /// Pending non-destructive audio edits. Non-nil means the file has queued
+    /// audio changes that have not yet been rendered to disk.
+    public var audioEditDescription: AudioEditDescription?
+
+    /// Whether any unsaved changes exist — metadata or audio edits.
+    public var isDirty: Bool { !dirtyFlags.isEmpty || audioEditDescription != nil }
+
+    /// Whether there is a pending audio edit queued for this file.
+    public var hasPendingAudioEdit: Bool { audioEditDescription != nil }
 
     // MARK: - Transients - not included in codable
 

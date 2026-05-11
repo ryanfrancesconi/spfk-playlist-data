@@ -14,6 +14,7 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(url: "https://github.com/ryanfrancesconi/spfk-audio-base", from: "1.0.1"),
         .package(url: "https://github.com/ryanfrancesconi/spfk-metadata-base", from: "0.0.1"),
         .package(url: "https://github.com/ryanfrancesconi/spfk-search", from: "0.0.5"),
         .package(url: "https://github.com/ryanfrancesconi/spfk-utils", from: "0.0.8"),
@@ -23,6 +24,7 @@ let package = Package(
         .target(
             name: "SPFKPlaylistData",
             dependencies: [
+                .product(name: "SPFKAudioBase", package: "spfk-audio-base"),
                 .product(name: "SPFKMetadataBase", package: "spfk-metadata-base"),
                 .product(name: "SPFKSearch", package: "spfk-search"),
                 .product(name: "SPFKUtils", package: "spfk-utils"),
