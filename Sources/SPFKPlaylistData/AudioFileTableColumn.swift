@@ -154,9 +154,10 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
         return CellStyle(kind: .standard, showsImage: false, textColorRole: .secondary, isItalic: isDirty)
     }
 
-    /// Returns the index of the first column title that is not a standard `AudioFileTableColumn`,
-    /// indicating where tag/metadata columns begin. Returns `columnTitles.count` if all titles
-    /// are standard columns, or `nil` if the array is empty.
+    /// Returns the index of the first column that is either not a standard `AudioFileTableColumn`
+    /// or is a non-required standard column, indicating the earliest valid insertion point for
+    /// new tag/metadata columns. Returns `columnTitles.count` if all columns are required standard
+    /// columns, or `nil` if the array is empty.
     public static func tagInsertionIndex(in columnTitles: [String]) -> Int? {
         guard !columnTitles.isEmpty else { return nil }
 

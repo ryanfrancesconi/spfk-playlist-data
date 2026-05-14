@@ -132,4 +132,42 @@ final class PlaylistElementValueTests: TestCaseModel {
         let value = element.sortValue(columnTitled: "NonexistentColumn123")
         #expect(value == nil)
     }
+
+    // MARK: - BEXT binary path
+
+    @Test func stringValueBEXTOriginatorFromBinaryChunk() throws {
+        let url = TestBundleResources.shared.tabla_wav
+        var desc = MetaAudioFileDescription(url: url)
+        var bext = BEXTDescription()
+        bext.originator = "Test Originator"
+        desc.bextDescription = bext
+        let element = try PlaylistElement(mafDescription: desc)
+
+        #expect(element.stringValue(columnTitled: "BEXT: Originator") == "Test Originator")
+    }
+
+    @Test func stringValueBEXTIdentifierReturnsNil() throws {
+        // iXML stable identifiers (e.g. "bext.BWF_ORIGINATOR") are not handled by stringValue —
+        // they go through ixmlValue at the table cell level.
+        let element = try makeElement()
+        #expect(element.stringValue(columnTitled: "bext.BWF_ORIGINATOR") == nil)
+    }
+
+    @Test func sortValueBEXTIdentifierReturnsNil() throws {
+        // Sort for descriptor columns routes through ixmlValue, not sortValue.
+        let element = try makeElement()
+        #expect(element.sortValue(columnTitled: "bext.BWF_ORIGINATOR") == nil)
+    }
+
+    @Test func sortValueBEXTDisplayTitleReturnsNil() throws {
+        // "BEXT: Originator" is not an AudioFileTableColumn or TagKey, so sortValue returns nil.
+        let url = TestBundleResources.shared.tabla_wav
+        var desc = MetaAudioFileDescription(url: url)
+        var bext = BEXTDescription()
+        bext.originator = "Test Originator"
+        desc.bextDescription = bext
+        let element = try PlaylistElement(mafDescription: desc)
+
+        #expect(element.sortValue(columnTitled: "BEXT: Originator") == nil)
+    }
 }

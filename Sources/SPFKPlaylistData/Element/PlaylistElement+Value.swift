@@ -3,6 +3,8 @@
 import Foundation
 import SPFKMetadataBase
 
+private let bextColumnPrefix = "BEXT: "
+
 extension PlaylistElement {
     public func stringValue(columnTitled displayName: String) -> String? {
         if let column = AudioFileTableColumn(displayName: displayName) {
@@ -11,8 +13,8 @@ extension PlaylistElement {
         } else if let tagKey = TagKey(displayName: displayName) {
             return mafDescription.tagProperties[tagKey]
 
-        } else if displayName.hasPrefix("BEXT: "),
-                  let bextKey = BEXTDescription.Key(displayName: String(displayName.dropFirst(6))) {
+        } else if displayName.hasPrefix(bextColumnPrefix),
+                  let bextKey = BEXTDescription.Key(displayName: String(displayName.dropFirst(bextColumnPrefix.count))) {
             return mafDescription.bextDescription?[bextKey]
         }
 
@@ -83,11 +85,6 @@ extension PlaylistElement {
         guard let column = AudioFileTableColumn(displayName: displayName) else {
             if let tagKey = TagKey(displayName: displayName) {
                 return mafDescription.tagProperties[tagKey]
-            }
-
-            if displayName.hasPrefix("BEXT: "),
-               let bextKey = BEXTDescription.Key(displayName: String(displayName.dropFirst(6))) {
-                return mafDescription.bextDescription?[bextKey]
             }
 
             return nil
