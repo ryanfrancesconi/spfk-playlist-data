@@ -10,6 +10,10 @@ extension PlaylistElement {
 
         } else if let tagKey = TagKey(displayName: displayName) {
             return mafDescription.tagProperties[tagKey]
+
+        } else if displayName.hasPrefix("BEXT: "),
+                  let bextKey = BEXTDescription.Key(displayName: String(displayName.dropFirst(6))) {
+            return mafDescription.bextDescription?[bextKey]
         }
 
         return nil
@@ -79,6 +83,11 @@ extension PlaylistElement {
         guard let column = AudioFileTableColumn(displayName: displayName) else {
             if let tagKey = TagKey(displayName: displayName) {
                 return mafDescription.tagProperties[tagKey]
+            }
+
+            if displayName.hasPrefix("BEXT: "),
+               let bextKey = BEXTDescription.Key(displayName: String(displayName.dropFirst(6))) {
+                return mafDescription.bextDescription?[bextKey]
             }
 
             return nil
