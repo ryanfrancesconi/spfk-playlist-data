@@ -41,7 +41,10 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
     public var audioEditDescription: AudioEditDescription?
 
     /// Whether any unsaved changes exist — metadata or audio edits.
-    public var isDirty: Bool { !dirtyFlags.isEmpty || hasPendingAudioEdit }
+    public var isDirty: Bool { hasPendingMetadataEdit || hasPendingAudioEdit }
+
+    /// Whether there is a pending metadata edit queued for this file.
+    public var hasPendingMetadataEdit: Bool { !dirtyFlags.isEmpty }
 
     /// Whether there is a pending audio edit queued for this file.
     public var hasPendingAudioEdit: Bool { audioEditDescription != nil }
