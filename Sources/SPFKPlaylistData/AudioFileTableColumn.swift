@@ -55,7 +55,7 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
     public var defaultWidth: CGFloat? {
         switch self {
         case .number, .channels: 40
-        case .dirty: 50
+        case .dirty: 37
         case .fileType, .fileSize: 60
         case .colors: 80
         case .file, .path: 200
@@ -66,7 +66,7 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
     public var minWidth: CGFloat {
         switch self {
         case .number, .channels: 30
-        case .dirty: 30
+        case .dirty: 37
         default: 50
         }
     }
