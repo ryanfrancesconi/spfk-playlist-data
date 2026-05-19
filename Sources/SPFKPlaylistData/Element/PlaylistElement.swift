@@ -60,6 +60,12 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
     /// Cleared when the element is saved or reparsed from disk.
     public var isExternallyModified: Bool = false
 
+    /// True when the file does not exist at its stored path (e.g. on a disconnected volume).
+    public var isMissing: Bool { !url.exists }
+
+    /// True when the file has been moved to the Trash (boot volume ~/.Trash/ or external /.Trashes/).
+    public var isInTrash: Bool { url.pathComponents.contains(".Trash") || url.pathComponents.contains(".Trashes") }
+
     public var isModified: Bool {
         mafDescription.urlProperties.isModified
     }
