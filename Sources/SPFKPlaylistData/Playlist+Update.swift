@@ -37,7 +37,7 @@ extension Playlist {
 
         guard elements[index] == element else {
             let message = "URL mismatch at index \(index): expected \(elements[index].url.lastPathComponent), got \(element.url.lastPathComponent)"
-            Log.error(message)
+            Log.fault(message)
             throw NSError(description: message)
         }
 
