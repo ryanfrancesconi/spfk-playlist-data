@@ -35,8 +35,11 @@ extension Playlist {
             throw NSError(description: "invalid row \(index)")
         }
 
-        // don't update if the urls don't match
-        assert(elements[index] == element)
+        guard elements[index] == element else {
+            let message = "URL mismatch at index \(index): expected \(elements[index].url.lastPathComponent), got \(element.url.lastPathComponent)"
+            Log.error(message)
+            throw NSError(description: message)
+        }
 
         let existing = elements[index]
 
