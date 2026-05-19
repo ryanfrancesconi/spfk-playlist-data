@@ -18,6 +18,18 @@ extension Playlist {
         throw NSError(file: #file, function: #function, description: "Failed to find element in table data")
     }
 
+    /// Replaces the element at `index` with `element`, which may have a different URL.
+    /// Use this after a file-system move where the URL has changed.
+    /// Unlike ``update(element:at:isDirty:)``, this does not assert URL equality.
+    public mutating func replaceElement(at index: Int, with element: PlaylistElement) throws {
+        guard contains(index: index) else {
+            throw NSError(description: "invalid row \(index)")
+        }
+        elements[index] = element
+        elements[index].sortIndex = index
+        elements[index].dirtyFlags = []
+    }
+
     public mutating func update(element: PlaylistElement, at index: Int, isDirty: Bool) throws {
         guard contains(index: index) else {
             throw NSError(description: "invalid row \(index)")
