@@ -79,12 +79,12 @@ extension Playlist: Codable, Serializable {
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         uuid = try container.decode(UUID.self, forKey: .uuid)
-        title = try container.decode(String.self, forKey: .title)
-        isEditable = try container.decode(Bool.self, forKey: .isEditable)
-        collectionType = try container.decode(CollectionType.self, forKey: .collectionType)
+        title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
+        isEditable = try container.decodeIfPresent(Bool.self, forKey: .isEditable) ?? true
+        collectionType = try container.decodeIfPresent(CollectionType.self, forKey: .collectionType) ?? .user
         imageData = try container.decodeIfPresent(Data.self, forKey: .imageData)
         hexColor = try container.decodeIfPresent(HexColor.self, forKey: .hexColor)
-        elements = try container.decode([PlaylistElement].self, forKey: .elements)
+        elements = try container.decodeIfPresent([PlaylistElement].self, forKey: .elements) ?? []
         selectedRowIndexes = try container.decodeIfPresent([Int].self, forKey: .selectedRowIndexes)
         tableColumns = try container.decodeIfPresent([String].self, forKey: .tableColumns)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)

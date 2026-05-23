@@ -51,7 +51,22 @@ public struct PlaylistGroup: Sendable, Hashable, Equatable {
     }
 }
 
-extension PlaylistGroup: Codable {}
+extension PlaylistGroup: Codable {
+    enum CodingKeys: String, CodingKey {
+        case uuid, title, isEditable, collectionType, hexColor, playlists, sortIndex
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        uuid = try container.decode(UUID.self, forKey: .uuid)
+        title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
+        isEditable = try container.decodeIfPresent(Bool.self, forKey: .isEditable) ?? true
+        collectionType = try container.decodeIfPresent(CollectionType.self, forKey: .collectionType) ?? .user
+        hexColor = try container.decodeIfPresent(HexColor.self, forKey: .hexColor)
+        playlists = try container.decodeIfPresent([Playlist].self, forKey: .playlists) ?? []
+        sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
+    }
+}
 
 extension PlaylistGroup {
     public static func createGroup(named title: String? = nil) -> PlaylistGroup {
