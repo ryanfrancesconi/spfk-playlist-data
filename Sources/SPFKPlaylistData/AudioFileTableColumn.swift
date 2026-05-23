@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import SPFKMetadataBase
 
 public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
     public static func < (lhs: AudioFileTableColumn, rhs: AudioFileTableColumn) -> Bool {
@@ -105,6 +106,9 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
 
             /// Finder tag dots cell — custom rendering.
             case color
+            
+            /// Star rating cell — rendered as 0–5 filled star icons.
+            case star
             /// Standard image+text cell.
             case standard
         }
@@ -148,6 +152,10 @@ public enum AudioFileTableColumn: String, Comparable, CaseIterable, Sendable {
     public static func cellStyle(forColumnTitled columnTitle: String, isDirty: Bool = false) -> CellStyle {
         if let column = AudioFileTableColumn(displayName: columnTitle) {
             return column.cellStyle(isDirty: isDirty)
+        }
+
+        if TagKey(displayName: columnTitle) == .rating {
+            return CellStyle(kind: .star, showsImage: false, textColorRole: .secondary, isItalic: false)
         }
 
         // Tag/metadata columns — standard text, no image
