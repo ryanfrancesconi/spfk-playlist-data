@@ -57,13 +57,23 @@ public struct TagQuery: Sendable {
         // Pass 1: colon syntax — "bpm:120", "artist:arca", "key:Cm"
         for (i, token) in tokens.enumerated() {
             guard token.contains(":") else { continue }
-            let parts = token.split(separator: ":", maxSplits: 1)
+            let parts = token.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
             guard parts.count == 2 else { continue }
 
             let keyStr = String(parts[0])
             let valueStr = String(parts[1])
 
-            guard valueStr.isNotEmpty else { continue }
+            if valueStr.isEmpty {
+                // "key: value" with space after colon — grab the next token as the value
+                guard i + 1 < tokens.count, !consumed.contains(i + 1) else { continue }
+                let nextValue = tokens[i + 1]
+                if let key = TagKey(string: keyStr) ?? Self.aliases[keyStr.lowercased()] {
+                    clauses.append((key, nextValue))
+                    consumed.insert(i)
+                    consumed.insert(i + 1)
+                }
+                continue
+            }
 
             if let key = TagKey(string: keyStr) ?? Self.aliases[keyStr.lowercased()] {
                 clauses.append((key, valueStr))

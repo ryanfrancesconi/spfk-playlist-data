@@ -237,4 +237,15 @@ final class TagQueryTests: TestCaseModel {
         let q = TagQuery(string: "bpm:120 tabla")
         #expect(element.similarity(to: q) != nil)
     }
+
+    @Test func elementTokenRequiresLookAhead() throws {
+        let url = TestBundleResources.shared.rated_80_m4a
+        var desc = MetaAudioFileDescription(url: url)
+        desc.tagProperties[.rating] = "4"
+        let element = try PlaylistElement(mafDescription: desc)
+
+        let q = TagQuery(string: "rating: 4 ")
+
+        #expect(element.similarity(to: q) == 1)
+    }
 }
