@@ -36,6 +36,12 @@ public struct Playlist: Sendable, Hashable, Equatable {
     /// requiring the user to open the playlist again.
     public var hasMissingFiles: Bool
 
+    /// Column identifiers that must be visible whenever this playlist is loaded.
+    /// Uses `AudioFileTableColumn.rawValue` for standard columns (e.g. `"Colors"`)
+    /// and `TagKey.displayName` for metadata columns (e.g. `"Rating"`).
+    /// Nil means no requirements. Takes precedence over the smart playlist definition default.
+    public var requiredColumns: [String]?
+
     public init(
         uuid: UUID,
         title: String,
@@ -48,7 +54,8 @@ public struct Playlist: Sendable, Hashable, Equatable {
         tableColumns: [String]? = nil,
         sortIndex: Int? = nil,
         columnLayout: [TableColumnState]? = nil,
-        hasMissingFiles: Bool = false
+        hasMissingFiles: Bool = false,
+        requiredColumns: [String]? = nil
     ) {
         self.uuid = uuid
         self.title = title
@@ -62,6 +69,7 @@ public struct Playlist: Sendable, Hashable, Equatable {
         self.sortIndex = sortIndex
         self.columnLayout = columnLayout
         self.hasMissingFiles = hasMissingFiles
+        self.requiredColumns = requiredColumns
 
         updateSortIndexes()
     }
@@ -74,6 +82,7 @@ extension Playlist: Codable, Serializable {
         case selectedRowIndexes, tableColumns, sortIndex
         case columnLayout
         case hasMissingFiles
+        case requiredColumns
     }
 
     public init(from decoder: any Decoder) throws {
@@ -90,6 +99,7 @@ extension Playlist: Codable, Serializable {
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
         columnLayout = try container.decodeIfPresent([TableColumnState].self, forKey: .columnLayout)
         hasMissingFiles = try container.decodeIfPresent(Bool.self, forKey: .hasMissingFiles) ?? false
+        requiredColumns = try container.decodeIfPresent([String].self, forKey: .requiredColumns)
         updateSortIndexes()
     }
 
@@ -107,5 +117,6 @@ extension Playlist: Codable, Serializable {
         try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
         try container.encodeIfPresent(columnLayout, forKey: .columnLayout)
         try container.encode(hasMissingFiles, forKey: .hasMissingFiles)
+        try container.encodeIfPresent(requiredColumns, forKey: .requiredColumns)
     }
 }
