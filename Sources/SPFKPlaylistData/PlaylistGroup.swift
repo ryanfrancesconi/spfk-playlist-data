@@ -66,6 +66,19 @@ extension PlaylistGroup: Codable {
         playlists = try container.decodeIfPresent([Playlist].self, forKey: .playlists) ?? []
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
     }
+
+    // playlists is omitted from encoding — v2 stores each playlist as a separate file.
+    // Decoding is unchanged: playlists defaults to [] when the key is absent, so v1
+    // files (which include playlists) still decode correctly.
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(uuid, forKey: .uuid)
+        try container.encode(title, forKey: .title)
+        try container.encode(isEditable, forKey: .isEditable)
+        try container.encode(collectionType, forKey: .collectionType)
+        try container.encodeIfPresent(hexColor, forKey: .hexColor)
+        try container.encodeIfPresent(sortIndex, forKey: .sortIndex)
+    }
 }
 
 extension PlaylistGroup {
