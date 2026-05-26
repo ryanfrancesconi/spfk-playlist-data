@@ -5,6 +5,9 @@ import SPFKBase
 import SPFKUtils
 
 public struct Playlist: Sendable, Hashable, Equatable {
+    /// Default maximum number of elements per playlist. User-configurable in Settings; hard ceiling is 50,000.
+    public static let defaultMaxElementCount: Int = 10_000
+
     public static func == (lhs: Playlist, rhs: Playlist) -> Bool {
         lhs.uuid == rhs.uuid &&
             lhs.elements == rhs.elements &&

@@ -79,7 +79,7 @@ extension Playlist {
         removeDuplicates: Bool = false
     ) throws -> IndexSet {
         guard newRows.isNotEmpty else {
-            throw NSError(description: "No elements are passed in")
+            throw NSError(description: "Nothing to add")
         }
 
         var newRows = newRows
@@ -88,7 +88,7 @@ extension Playlist {
             newRows = filterContains(elements: newRows)
 
             guard newRows.isNotEmpty else {
-                throw NSError(description: "No new elements were passed in")
+                throw NSError(description: "Nothing new to add")
             }
         }
 
