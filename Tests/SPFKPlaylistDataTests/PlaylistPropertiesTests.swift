@@ -12,7 +12,7 @@ final class PlaylistPropertiesTests: TestCaseModel {
     // MARK: - Helpers
 
     private func makePlaylist(urls: [URL]) throws -> Playlist {
-        let elements = try urls.map { try PlaylistElement(mafDescription: .init(url: $0)) }
+        let elements = urls.map { PlaylistElement(mafDescription: .init(url: $0)) }
         return Playlist(uuid: UUID(), title: "Test", collectionType: .user, elements: elements)
     }
 
@@ -152,7 +152,7 @@ final class PlaylistPropertiesTests: TestCaseModel {
         let playlist = try makePlaylist(urls: urls)
 
         let newURL = TestBundleResources.shared.cowbell_wav
-        let candidates = try [urls[0], newURL].map { try PlaylistElement(mafDescription: .init(url: $0)) }
+        let candidates = [urls[0], newURL].map { PlaylistElement(mafDescription: .init(url: $0)) }
         let result = playlist.filterContains(elements: candidates)
 
         #expect(result.count == 1)
@@ -164,7 +164,7 @@ final class PlaylistPropertiesTests: TestCaseModel {
         let playlist = try makePlaylist(urls: urls)
 
         let newURL = TestBundleResources.shared.cowbell_wav
-        let candidates = try [newURL].map { try PlaylistElement(mafDescription: .init(url: $0)) }
+        let candidates = [newURL].map { PlaylistElement(mafDescription: .init(url: $0)) }
         let result = playlist.filterContains(elements: candidates)
 
         #expect(result.count == 1)

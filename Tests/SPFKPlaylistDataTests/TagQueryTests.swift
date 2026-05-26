@@ -163,7 +163,7 @@ final class TagQueryTests: TestCaseModel {
         let url = TestBundleResources.shared.tabla_wav
         var desc = MetaAudioFileDescription(url: url)
         desc.tagProperties.set(tag: .bpm, value: "120")
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let q = TagQuery(string: "120 bpm")
         #expect(element.similarity(to: q) != nil)
@@ -173,7 +173,7 @@ final class TagQueryTests: TestCaseModel {
         let url = TestBundleResources.shared.tabla_wav
         var desc = MetaAudioFileDescription(url: url)
         desc.tagProperties.set(tag: .bpm, value: "90")
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let q = TagQuery(string: "120 bpm")
         #expect(element.similarity(to: q) == nil)
@@ -181,7 +181,7 @@ final class TagQueryTests: TestCaseModel {
 
     @Test func elementNoMatchWhenTagAbsent() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: MetaAudioFileDescription(url: url))
+        let element = PlaylistElement(mafDescription: MetaAudioFileDescription(url: url))
 
         let q = TagQuery(string: "120 bpm")
         #expect(element.similarity(to: q) == nil)
@@ -191,7 +191,7 @@ final class TagQueryTests: TestCaseModel {
         let url = TestBundleResources.shared.tabla_wav
         var desc = MetaAudioFileDescription(url: url)
         desc.tagProperties.set(tag: .bpm, value: "120")
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let q = TagQuery(string: "bpm:120")
         #expect(element.similarity(to: q) == 1.0)
@@ -199,7 +199,7 @@ final class TagQueryTests: TestCaseModel {
 
     @Test func elementEmptyQueryReturnsNil() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: MetaAudioFileDescription(url: url))
+        let element = PlaylistElement(mafDescription: MetaAudioFileDescription(url: url))
 
         let q = TagQuery(string: "")
         #expect(element.similarity(to: q) == nil)
@@ -207,7 +207,7 @@ final class TagQueryTests: TestCaseModel {
 
     @Test func elementPureFuzzyQueryStillWorks() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: MetaAudioFileDescription(url: url))
+        let element = PlaylistElement(mafDescription: MetaAudioFileDescription(url: url))
 
         // "tabla" should match the filename via fuzzy
         let q = TagQuery(string: "tabla")
@@ -220,7 +220,7 @@ final class TagQueryTests: TestCaseModel {
         let url = TestBundleResources.shared.tabla_wav
         var desc = MetaAudioFileDescription(url: url)
         desc.tagProperties.set(tag: .bpm, value: "120")
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let q = TagQuery(string: "bpm:120 zzznomatch")
         let score = element.similarity(to: q)
@@ -232,7 +232,7 @@ final class TagQueryTests: TestCaseModel {
         let url = TestBundleResources.shared.tabla_wav
         var desc = MetaAudioFileDescription(url: url)
         desc.tagProperties.set(tag: .bpm, value: "120")
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let q = TagQuery(string: "bpm:120 tabla")
         #expect(element.similarity(to: q) != nil)
@@ -242,7 +242,7 @@ final class TagQueryTests: TestCaseModel {
         let url = TestBundleResources.shared.rated_80_m4a
         var desc = MetaAudioFileDescription(url: url)
         desc.tagProperties[.rating] = "4"
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let q = TagQuery(string: "rating: 4 ")
 

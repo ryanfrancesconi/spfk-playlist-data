@@ -12,7 +12,7 @@ final class PlaylistSortTests: TestCaseModel {
     // MARK: - Helpers
 
     private func makePlaylist(urls: [URL]) throws -> Playlist {
-        let elements = try urls.map { try PlaylistElement(mafDescription: .init(url: $0)) }
+        let elements = urls.map { PlaylistElement(mafDescription: .init(url: $0)) }
         return Playlist(uuid: UUID(), title: "Test", collectionType: .user, elements: elements)
     }
 

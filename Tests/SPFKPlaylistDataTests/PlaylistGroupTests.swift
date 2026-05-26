@@ -15,7 +15,7 @@ final class PlaylistGroupTests: TestCaseModel {
         title: String = "Test",
         urls: [URL] = []
     ) throws -> Playlist {
-        let elements = try urls.map { try PlaylistElement(mafDescription: .init(url: $0)) }
+        let elements = urls.map { PlaylistElement(mafDescription: .init(url: $0)) }
         return Playlist(uuid: UUID(), title: title, collectionType: .user, elements: elements)
     }
 
@@ -139,7 +139,9 @@ final class PlaylistGroupTests: TestCaseModel {
         #expect(decoded.title == original.title)
         #expect(decoded.isEditable == original.isEditable)
         #expect(decoded.collectionType == original.collectionType)
-        #expect(decoded.playlists.count == 1)
+        // playlists are intentionally omitted from encoding in v2 — each playlist
+        // is stored as a separate file by PlaylistGroupStore.
+        #expect(decoded.playlists.isEmpty)
         #expect(decoded.sortIndex == original.sortIndex)
     }
 

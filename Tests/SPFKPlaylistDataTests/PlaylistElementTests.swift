@@ -15,15 +15,15 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func equalityIsURLBased() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let a = try PlaylistElement(mafDescription: .init(url: url))
-        let b = try PlaylistElement(mafDescription: .init(url: url))
+        let a = PlaylistElement(mafDescription: .init(url: url))
+        let b = PlaylistElement(mafDescription: .init(url: url))
 
         #expect(a == b)
     }
 
     @Test func equalityDifferentURLs() throws {
-        let a = try PlaylistElement(mafDescription: .init(url: TestBundleResources.shared.tabla_wav))
-        let b = try PlaylistElement(mafDescription: .init(url: TestBundleResources.shared.tabla_mp3))
+        let a = PlaylistElement(mafDescription: .init(url: TestBundleResources.shared.tabla_wav))
+        let b = PlaylistElement(mafDescription: .init(url: TestBundleResources.shared.tabla_mp3))
 
         #expect(a != b)
     }
@@ -36,8 +36,8 @@ final class PlaylistElementTests: TestCaseModel {
         var descB = MetaAudioFileDescription(url: url)
         descB.tagProperties.set(tag: .title, value: "Title B")
 
-        let a = try PlaylistElement(mafDescription: descA)
-        let b = try PlaylistElement(mafDescription: descB)
+        let a = PlaylistElement(mafDescription: descA)
+        let b = PlaylistElement(mafDescription: descB)
 
         // Same URL = equal, regardless of metadata
         #expect(a == b)
@@ -47,8 +47,8 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func hashMatchesForSameURL() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let a = try PlaylistElement(mafDescription: .init(url: url))
-        let b = try PlaylistElement(mafDescription: .init(url: url))
+        let a = PlaylistElement(mafDescription: .init(url: url))
+        let b = PlaylistElement(mafDescription: .init(url: url))
 
         #expect(a.hashValue == b.hashValue)
     }
@@ -57,21 +57,21 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func urlComputedProperty() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: .init(url: url))
+        let element = PlaylistElement(mafDescription: .init(url: url))
 
         #expect(element.url == url)
     }
 
     @Test func filename() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: .init(url: url))
+        let element = PlaylistElement(mafDescription: .init(url: url))
 
         #expect(element.filename == url.lastPathComponent)
     }
 
     @Test func filenameNoExtension() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: .init(url: url))
+        let element = PlaylistElement(mafDescription: .init(url: url))
 
         #expect(element.filenameNoExtension == url.deletingPathExtension().lastPathComponent)
     }
@@ -80,7 +80,7 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func isDirtyDefaultsFalse() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: .init(url: url))
+        let element = PlaylistElement(mafDescription: .init(url: url))
 
         #expect(element.isDirty == false)
     }
@@ -89,7 +89,7 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func dirtyFlagsDefaultEmpty() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: .init(url: url))
+        let element = PlaylistElement(mafDescription: .init(url: url))
 
         #expect(element.dirtyFlags.isEmpty)
         #expect(!element.dirtyFlags.contains(.image))
@@ -98,7 +98,7 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func dirtyFlagsAreSettable() throws {
         let url = TestBundleResources.shared.tabla_wav
-        var element = try PlaylistElement(mafDescription: .init(url: url))
+        var element = PlaylistElement(mafDescription: .init(url: url))
 
         element.dirtyFlags.insert(.xmp)
         #expect(element.dirtyFlags.contains(.xmp))
@@ -111,7 +111,7 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func codableRoundTrip() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let original = try PlaylistElement(mafDescription: .init(url: url), sortIndex: 5)
+        let original = PlaylistElement(mafDescription: .init(url: url), sortIndex: 5)
 
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
@@ -122,7 +122,7 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func codableDirtyFlagsEmptyWhenNoneSet() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let original = try PlaylistElement(mafDescription: .init(url: url))
+        let original = PlaylistElement(mafDescription: .init(url: url))
 
         let data = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(PlaylistElement.self, from: data)
@@ -132,7 +132,7 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func codableDirtyFlagsPreserved() throws {
         let url = TestBundleResources.shared.tabla_wav
-        var original = try PlaylistElement(mafDescription: .init(url: url))
+        var original = PlaylistElement(mafDescription: .init(url: url))
         original.dirtyFlags = [.metadata, .xmp]
 
         let data = try JSONEncoder().encode(original)
@@ -143,7 +143,7 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func codableAllDirtyFlagsRoundTrip() throws {
         let url = TestBundleResources.shared.tabla_wav
-        var original = try PlaylistElement(mafDescription: .init(url: url))
+        var original = PlaylistElement(mafDescription: .init(url: url))
         original.dirtyFlags = [.metadata, .image, .xmp, .markers]
 
         let data = try JSONEncoder().encode(original)
@@ -156,7 +156,7 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func searchableValuePopulatedOnInit() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: .init(url: url))
+        let element = PlaylistElement(mafDescription: .init(url: url))
 
         // Should contain at least the filename
         #expect(element.searchableValue.isNotEmpty)
@@ -164,7 +164,7 @@ final class PlaylistElementTests: TestCaseModel {
 
     @Test func searchableValueUpdatesOnMafDescriptionChange() throws {
         let url = TestBundleResources.shared.tabla_wav
-        var element = try PlaylistElement(mafDescription: .init(url: url))
+        var element = PlaylistElement(mafDescription: .init(url: url))
         let initialSearch = element.searchableValue
 
         element.mafDescription.tagProperties.set(tag: .title, value: "New Title XYZ")

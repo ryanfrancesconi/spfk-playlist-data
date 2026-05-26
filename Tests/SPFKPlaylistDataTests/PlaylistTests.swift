@@ -12,7 +12,7 @@ final class PlaylistTests: TestCaseModel {
     // MARK: - Helpers
 
     private func makePlaylist(urls: [URL]) throws -> Playlist {
-        let elements = try urls.map { try PlaylistElement(mafDescription: .init(url: $0)) }
+        let elements = urls.map { PlaylistElement(mafDescription: .init(url: $0)) }
         return Playlist(uuid: UUID(), title: "Test", collectionType: .user, elements: elements)
     }
 
@@ -20,7 +20,7 @@ final class PlaylistTests: TestCaseModel {
 
     @Test func equalitySameUUIDAndElements() throws {
         let urls = Array(TestBundleResources.shared.formats.prefix(2))
-        let elements = try urls.map { try PlaylistElement(mafDescription: .init(url: $0)) }
+        let elements = urls.map { PlaylistElement(mafDescription: .init(url: $0)) }
         let uuid = UUID()
 
         let a = Playlist(uuid: uuid, title: "A", collectionType: .user, elements: elements)
@@ -32,7 +32,7 @@ final class PlaylistTests: TestCaseModel {
 
     @Test func equalityDifferentUUID() throws {
         let urls = Array(TestBundleResources.shared.formats.prefix(2))
-        let elements = try urls.map { try PlaylistElement(mafDescription: .init(url: $0)) }
+        let elements = urls.map { PlaylistElement(mafDescription: .init(url: $0)) }
 
         let a = Playlist(uuid: UUID(), title: "A", collectionType: .user, elements: elements)
         let b = Playlist(uuid: UUID(), title: "A", collectionType: .user, elements: elements)

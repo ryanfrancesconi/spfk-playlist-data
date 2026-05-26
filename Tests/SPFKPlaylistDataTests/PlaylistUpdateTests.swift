@@ -14,12 +14,12 @@ final class PlaylistUpdateTests: TestCaseModel {
     // MARK: - Helpers
 
     private func makePlaylist(urls: [URL]) throws -> Playlist {
-        let elements = try urls.map { try PlaylistElement(mafDescription: .init(url: $0)) }
+        let elements = urls.map { PlaylistElement(mafDescription: .init(url: $0)) }
         return Playlist(uuid: UUID(), title: "Test", collectionType: .user, elements: elements)
     }
 
-    private func makeElements(urls: [URL]) throws -> [PlaylistElement] {
-        try urls.map { try PlaylistElement(mafDescription: .init(url: $0)) }
+    private func makeElements(urls: [URL]) -> [PlaylistElement] {
+        urls.map { PlaylistElement(mafDescription: .init(url: $0)) }
     }
 
     // MARK: - update(all:)
@@ -29,7 +29,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         var playlist = try makePlaylist(urls: urls)
 
         let newURLs = Array(TestBundleResources.shared.formats.suffix(2))
-        let newElements = try makeElements(urls: newURLs)
+        let newElements = makeElements(urls: newURLs)
 
         playlist.update(all: newElements)
 
@@ -42,7 +42,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         let urls = Array(TestBundleResources.shared.formats.prefix(3))
         var playlist = try makePlaylist(urls: urls)
 
-        let newElements = try makeElements(urls: Array(urls.reversed()))
+        let newElements = makeElements(urls: Array(urls.reversed()))
         playlist.update(all: newElements)
 
         for (i, element) in playlist.elements.enumerated() {
@@ -69,7 +69,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         let urls = Array(TestBundleResources.shared.formats.prefix(2))
         var playlist = try makePlaylist(urls: urls)
 
-        let missingElement = try PlaylistElement(mafDescription: .init(url: TestBundleResources.shared.cowbell_wav))
+        let missingElement = PlaylistElement(mafDescription: .init(url: TestBundleResources.shared.cowbell_wav))
 
         #expect(throws: Error.self) {
             try playlist.update(element: missingElement, isDirty: false)
@@ -204,7 +204,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         var playlist = try makePlaylist(urls: urls)
 
         let newURL = TestBundleResources.shared.cowbell_wav
-        let newElements = try makeElements(urls: [newURL])
+        let newElements = makeElements(urls: [newURL])
 
         let indexes = try playlist.insert(elements: newElements, at: 0)
 
@@ -218,7 +218,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         var playlist = try makePlaylist(urls: urls)
 
         let newURL = TestBundleResources.shared.cowbell_wav
-        let newElements = try makeElements(urls: [newURL])
+        let newElements = makeElements(urls: [newURL])
 
         let indexes = try playlist.insert(elements: newElements, at: playlist.count())
 
@@ -232,7 +232,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         var playlist = try makePlaylist(urls: urls)
 
         let newURLs = Array(TestBundleResources.shared.formats.suffix(3))
-        let newElements = try makeElements(urls: newURLs)
+        let newElements = makeElements(urls: newURLs)
 
         let indexes = try playlist.insert(elements: newElements, at: 0)
 
@@ -254,7 +254,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         var playlist = try makePlaylist(urls: urls)
 
         let newURL = TestBundleResources.shared.cowbell_wav
-        let mixed = try makeElements(urls: [urls[0], newURL])
+        let mixed = makeElements(urls: [urls[0], newURL])
 
         let indexes = try playlist.insert(elements: mixed, at: 0, removeDuplicates: true)
 
@@ -267,7 +267,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         let urls = Array(TestBundleResources.shared.formats.prefix(2))
         var playlist = try makePlaylist(urls: urls)
 
-        let duplicates = try makeElements(urls: urls)
+        let duplicates = makeElements(urls: urls)
 
         #expect(throws: Error.self) {
             try playlist.insert(elements: duplicates, at: 0, removeDuplicates: true)
@@ -278,7 +278,7 @@ final class PlaylistUpdateTests: TestCaseModel {
         let urls = Array(TestBundleResources.shared.formats.prefix(2))
         var playlist = try makePlaylist(urls: urls)
 
-        let newElements = try makeElements(urls: [TestBundleResources.shared.cowbell_wav])
+        let newElements = makeElements(urls: [TestBundleResources.shared.cowbell_wav])
         _ = try playlist.insert(elements: newElements, at: 0)
 
         for (i, element) in playlist.elements.enumerated() {

@@ -12,20 +12,20 @@ import Testing
 final class PlaylistElementValueTests: TestCaseModel {
     // MARK: - Helpers
 
-    private func makeElement(url: URL = TestBundleResources.shared.tabla_wav) throws -> PlaylistElement {
-        try PlaylistElement(mafDescription: .init(url: url))
+    private func makeElement(url: URL = TestBundleResources.shared.tabla_wav) -> PlaylistElement {
+        PlaylistElement(mafDescription: .init(url: url))
     }
 
     // MARK: - stringValue(column:)
 
     @Test func numberReturnsNil() throws {
-        let element = try makeElement()
+        let element = makeElement()
         #expect(element.stringValue(column: .number) == nil)
     }
 
     @Test func fileReturnsFilename() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try makeElement(url: url)
+        let element = makeElement(url: url)
         #expect(element.stringValue(column: .file) == url.lastPathComponent)
     }
 
@@ -33,13 +33,13 @@ final class PlaylistElementValueTests: TestCaseModel {
         let url = TestBundleResources.shared.tabla_wav
         var desc = MetaAudioFileDescription(url: url)
         desc.fileType = .wav
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         #expect(element.stringValue(column: .fileType) == "wav")
     }
 
     @Test func markersWithNoMarkers() throws {
-        let element = try makeElement()
+        let element = makeElement()
         let value = element.stringValue(column: .markers)
         #expect(value == nil)
     }
@@ -51,7 +51,7 @@ final class PlaylistElementValueTests: TestCaseModel {
             AudioMarkerDescription(name: "A", startTime: 0),
             AudioMarkerDescription(name: "B", startTime: 1),
         ])
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let value = element.stringValue(column: .markers)
         #expect(value == "2 Markers")
@@ -63,7 +63,7 @@ final class PlaylistElementValueTests: TestCaseModel {
         desc.markerCollection.update(markerDescriptions: [
             AudioMarkerDescription(name: "A", startTime: 0),
         ])
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let value = element.stringValue(column: .markers)
         #expect(value == "1 Marker")
@@ -72,7 +72,7 @@ final class PlaylistElementValueTests: TestCaseModel {
     // MARK: - stringValue(columnTitled:)
 
     @Test func stringValueByKnownColumnTitle() throws {
-        let element = try makeElement()
+        let element = makeElement()
         // "File" is a known AudioFileTableColumn
         let value = element.stringValue(columnTitled: "File")
         #expect(value == element.filename)
@@ -82,14 +82,14 @@ final class PlaylistElementValueTests: TestCaseModel {
         let url = TestBundleResources.shared.tabla_wav
         var desc = MetaAudioFileDescription(url: url)
         desc.tagProperties.set(tag: .title, value: "My Song")
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let value = element.stringValue(columnTitled: "Title")
         #expect(value == "My Song")
     }
 
     @Test func stringValueByUnrecognizedName() throws {
-        let element = try makeElement()
+        let element = makeElement()
         let value = element.stringValue(columnTitled: "NonexistentColumn123")
         #expect(value == nil)
     }
@@ -97,7 +97,7 @@ final class PlaylistElementValueTests: TestCaseModel {
     // MARK: - sortValue(columnTitled:)
 
     @Test func sortValueForFileFallsBackToStringValue() throws {
-        let element = try makeElement()
+        let element = makeElement()
         let sortVal = element.sortValue(columnTitled: "File")
         let strVal = element.stringValue(columnTitled: "File")
         #expect(sortVal == strVal)
@@ -110,7 +110,7 @@ final class PlaylistElementValueTests: TestCaseModel {
             AudioMarkerDescription(name: "A", startTime: 0),
             AudioMarkerDescription(name: "B", startTime: 1),
         ])
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let sortVal = element.sortValue(columnTitled: "Markers")
         // Sort value should be "2" (numeric), not "2 Markers" (display)
@@ -121,14 +121,14 @@ final class PlaylistElementValueTests: TestCaseModel {
         let url = TestBundleResources.shared.tabla_wav
         var desc = MetaAudioFileDescription(url: url)
         desc.tagProperties.set(tag: .artist, value: "Test Artist")
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         let value = element.sortValue(columnTitled: "Artist")
         #expect(value == "Test Artist")
     }
 
     @Test func sortValueForUnrecognizedReturnsNil() throws {
-        let element = try makeElement()
+        let element = makeElement()
         let value = element.sortValue(columnTitled: "NonexistentColumn123")
         #expect(value == nil)
     }
@@ -141,7 +141,7 @@ final class PlaylistElementValueTests: TestCaseModel {
         var bext = BEXTDescription()
         bext.originator = "Test Originator"
         desc.bextDescription = bext
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         #expect(element.stringValue(columnTitled: "BEXT: Originator") == "Test Originator")
     }
@@ -149,13 +149,13 @@ final class PlaylistElementValueTests: TestCaseModel {
     @Test func stringValueBEXTIdentifierReturnsNil() throws {
         // iXML stable identifiers (e.g. "bext.BWF_ORIGINATOR") are not handled by stringValue —
         // they go through ixmlValue at the table cell level.
-        let element = try makeElement()
+        let element = makeElement()
         #expect(element.stringValue(columnTitled: "bext.BWF_ORIGINATOR") == nil)
     }
 
     @Test func sortValueBEXTIdentifierReturnsNil() throws {
         // Sort for descriptor columns routes through ixmlValue, not sortValue.
-        let element = try makeElement()
+        let element = makeElement()
         #expect(element.sortValue(columnTitled: "bext.BWF_ORIGINATOR") == nil)
     }
 
@@ -166,7 +166,7 @@ final class PlaylistElementValueTests: TestCaseModel {
         var bext = BEXTDescription()
         bext.originator = "Test Originator"
         desc.bextDescription = bext
-        let element = try PlaylistElement(mafDescription: desc)
+        let element = PlaylistElement(mafDescription: desc)
 
         #expect(element.sortValue(columnTitled: "BEXT: Originator") == nil)
     }

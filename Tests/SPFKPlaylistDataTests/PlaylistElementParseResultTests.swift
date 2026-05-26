@@ -34,7 +34,7 @@ final class PlaylistElementParseResultTests: TestCaseModel {
         let url1 = TestBundleResources.shared.tabla_wav
         let url2 = TestBundleResources.shared.tabla_mp3
 
-        let element1 = try PlaylistElement(mafDescription: .init(url: url1))
+        let element1 = PlaylistElement(mafDescription: .init(url: url1))
 
         let results: [PlaylistElementParseResult] = [
             PlaylistElementParseResult(url: url1, element: element1, error: nil),
@@ -50,8 +50,8 @@ final class PlaylistElementParseResultTests: TestCaseModel {
         let url1 = TestBundleResources.shared.tabla_wav
         let url2 = TestBundleResources.shared.tabla_mp3
 
-        let element1 = try PlaylistElement(mafDescription: .init(url: url1))
-        let element2 = try PlaylistElement(mafDescription: .init(url: url2))
+        let element1 = PlaylistElement(mafDescription: .init(url: url1))
+        let element2 = PlaylistElement(mafDescription: .init(url: url2))
 
         let results: [PlaylistElementParseResult] = [
             PlaylistElementParseResult(url: url1, element: element1, error: nil),
@@ -80,7 +80,7 @@ final class PlaylistElementParseResultTests: TestCaseModel {
             // valid element → should NOT be in unsupportedFiles
             PlaylistElementParseResult(
                 url: url3,
-                element: try PlaylistElement(mafDescription: .init(url: url3)),
+                element: PlaylistElement(mafDescription: .init(url: url3)),
                 error: nil
             ),
         ]
@@ -92,7 +92,7 @@ final class PlaylistElementParseResultTests: TestCaseModel {
 
     @Test func unsupportedFilesEmptyWhenAllValid() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: .init(url: url))
+        let element = PlaylistElement(mafDescription: .init(url: url))
 
         let results: [PlaylistElementParseResult] = [
             PlaylistElementParseResult(url: url, element: element, error: nil),
@@ -103,7 +103,7 @@ final class PlaylistElementParseResultTests: TestCaseModel {
 
     @Test func unsupportedFilesSkipsResultsWithElement() throws {
         let url = TestBundleResources.shared.tabla_wav
-        let element = try PlaylistElement(mafDescription: .init(url: url))
+        let element = PlaylistElement(mafDescription: .init(url: url))
 
         // Even with unsupported error code, if element is non-nil, it's not unsupported
         let results: [PlaylistElementParseResult] = [

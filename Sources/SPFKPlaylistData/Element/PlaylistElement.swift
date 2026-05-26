@@ -23,7 +23,6 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
         mafDescription.url
     }
 
-    public var bookmarkData: Data?
     public var hexColor: HexColor?
 
     public var mafDescription: MetaAudioFileDescription {
@@ -98,24 +97,11 @@ public struct PlaylistElement: Sendable, Hashable, Equatable {
     public init(
         mafDescription: MetaAudioFileDescription,
         sortIndex: Int? = nil
-    ) throws {
+    ) {
         self.mafDescription = mafDescription
         self.sortIndex = sortIndex
         hexColor = mafDescription.urlProperties.finderTags.hexColorTag
-
-        do {
-            try updateBookmark()
-        } catch {
-            Log.error("updateBookmark()", error)
-
-            throw error
-        }
-
         invalidateSearch()
-    }
-
-    public mutating func updateBookmark() throws {
-        bookmarkData = try url.bookmarkData(options: [])
     }
 }
 
