@@ -109,16 +109,11 @@ extension PlaylistElement {
             return mafDescription.markerCollection.markerDescriptions.count.string
 
         case .dirty:
-            // These are the type of flags displayed in this column
-            if hasPendingMetadataEdit {
-                return "1"
-            } else if hasPendingAudioEdit {
-                return "2"
-            } else if !mafDescription.isAVPlayable {
-                return "3"
-            } else {
-                return "0"
-            }
+            var value = 0
+            if !mafDescription.isAVPlayable { value |= 4 }
+            if hasPendingMetadataEdit       { value |= 2 }
+            if hasPendingAudioEdit          { value |= 1 }
+            return value.string
 
         default:
             return stringValue(column: column)
