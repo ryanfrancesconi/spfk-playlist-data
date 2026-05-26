@@ -96,7 +96,9 @@ extension Playlist: Codable, Serializable {
         collectionType = try container.decodeIfPresent(CollectionType.self, forKey: .collectionType) ?? .user
         imageData = try container.decodeIfPresent(Data.self, forKey: .imageData)
         hexColor = try container.decodeIfPresent(HexColor.self, forKey: .hexColor)
-        elements = try container.decodeIfPresent([PlaylistElement].self, forKey: .elements) ?? []
+        let rawElements = try container.decodeIfPresent([PlaylistElement].self, forKey: .elements) ?? []
+        var seen = Set<URL>()
+        elements = rawElements.filter { seen.insert($0.url).inserted }
         selectedRowIndexes = try container.decodeIfPresent([Int].self, forKey: .selectedRowIndexes)
         tableColumns = try container.decodeIfPresent([String].self, forKey: .tableColumns)
         sortIndex = try container.decodeIfPresent(Int.self, forKey: .sortIndex)
