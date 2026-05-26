@@ -14,7 +14,8 @@ extension PlaylistElement {
             return mafDescription.tagProperties[tagKey]
 
         } else if displayName.hasPrefix(bextColumnPrefix),
-                  let bextKey = BEXTDescription.Key(displayName: String(displayName.dropFirst(bextColumnPrefix.count))) {
+                  let bextKey = BEXTDescription.Key(displayName: String(displayName.dropFirst(bextColumnPrefix.count)))
+        {
             return mafDescription.bextDescription?[bextKey]
         }
 
@@ -108,7 +109,16 @@ extension PlaylistElement {
             return mafDescription.markerCollection.markerDescriptions.count.string
 
         case .dirty:
-            return isDirty ? "0" : "1"
+            // These are the type of flags displayed in this column
+            if hasPendingMetadataEdit {
+                return "1"
+            } else if hasPendingAudioEdit {
+                return "2"
+            } else if !mafDescription.isAVPlayable {
+                return "3"
+            } else {
+                return "0"
+            }
 
         default:
             return stringValue(column: column)
